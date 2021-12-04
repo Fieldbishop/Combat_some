@@ -10,7 +10,7 @@
           </a>
           <a class="nav-link" id="leaderboards" href="/leaderboards"><b>Leaderboards</b></a>
         </div>
-        <div id="navbar-user" class="navbar-right" v-if="logged === false">
+        <div id="navbar-user" class="navbar-right" v-if="loggedIn === false">
           <ul>
             <li>
               <a class="nav-link" onclick="document.getElementById('log-in').style.display='block'"><b>Log in</b></a>
@@ -26,7 +26,7 @@
               <a class="nav-link" href="/user"><b>User</b></a>
             </li>
             <li>
-              <a class="nav-link" @click="signOut()"><b>Sign out</b></a> <!-- this.logged = false -->
+              <a class="nav-link" @click="signOut()"><b>Sign out</b></a> <!-- this.loggedIn = false -->
             </li>
           </ul>
         </div>
@@ -40,12 +40,16 @@ export default {
   name: "NavBar",
   data() {
     return {
-      logged: false,
+
     }
+  },
+  props: {
+    loggedIn: Boolean,
+
   },
   methods: {
     signOut() {   // What should happen when logging off?
-      this.logged = false;
+      this.$emit('signOut:');
     },
   }
 }

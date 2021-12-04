@@ -1,9 +1,10 @@
 <template>
   <div id="app">
-    <nav-bar/>
-    <log-in/>
-    <sign-up/>
+    <nav-bar :loggedIn="loggedIn" @signOut:="handleSignOut"/>
+    <log-in @loggin:login="handleLogin"/>
+    <sign-up @signingUp:signUp="handleSignup"/>
     <main-content/>
+    <battle-popup v-if="loggedIn === true"/>
   </div>
 </template>
 
@@ -12,14 +13,44 @@ import NavBar from "./components/NavBar";
 import SignUp from "./components/SignUp";
 import LogIn from "./components/LogIn";
 import MainContent from "./components/MainContent";
+import BattlePopup from "./components/BattlePopup";
 
 export default {
   name: 'App',
   components: {
+    BattlePopup,
     MainContent,
     LogIn,
     SignUp,
     NavBar,
+  },
+  data() {
+    return {
+      loggedIn: false,
+
+    }
+  },
+  mounted() {
+
+  },
+
+  methods: {
+
+    handleLogin(login) {
+      console.log(login);
+      this.loggedIn = true;
+    },
+
+    handleSignup(signUp) {
+      console.log(signUp);
+    },
+
+    handleSignOut() {
+      this.loggedIn = false;
+    },
+
+
+
   }
 }
 
