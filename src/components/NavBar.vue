@@ -1,0 +1,129 @@
+<template>
+  <div class="fixed-top">
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="navbar-left">
+          <a href="/" style="float: left;">
+            <span>
+              <img id="logo" src="../assets/fist_logo.png" alt="imagebattle">
+            </span>
+          </a>
+          <a class="nav-link" id="leaderboards" href="/leaderboards"><b>Leaderboards</b></a>
+        </div>
+        <div id="navbar-user" class="navbar-right" v-if="logged === false">
+          <ul>
+            <li>
+              <a class="nav-link" onclick="document.getElementById('log-in').style.display='block'"><b>Log in</b></a>
+            </li>
+            <li>
+                <a class="nav-link" onclick="document.getElementById('sign-up').style.display='block'"><b>Sign up</b></a>
+            </li>
+          </ul>
+        </div>
+        <div id="navbar-logged" class="navbar-right" v-else>
+          <ul>
+            <li>
+              <a class="nav-link" href="/user"><b>User</b></a>
+            </li>
+            <li>
+              <a class="nav-link" @click="signOut()"><b>Sign out</b></a> <!-- this.logged = false -->
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "NavBar",
+  data() {
+    return {
+      logged: false,
+    }
+  },
+  methods: {
+    signOut() {   // What should happen when logging off?
+      this.logged = false;
+    },
+  }
+}
+</script>
+
+<style scoped>
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+.navbar {
+  background: #eeeeee;
+  height: 56px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: .5rem 1rem;
+}
+
+.nav-container {
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+#logo{
+  max-width: 50px;
+  max-height: 50px;
+}
+
+.navbar-left {
+  align-items: center;
+  display: flex;
+}
+
+.navbar-left * {
+  margin: 10px;
+}
+
+@media (max-width: 590px) {
+  .nav-container {
+    justify-content: space-around;
+  }
+}
+
+.navbar-right ul {
+  align-items: center;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.navbar-right ul li {
+  display: inline-block;
+}
+
+.navbar-right ul form input {
+  max-width: 5em;
+  margin: 0.5em;
+}
+
+.nav-link {
+  color: #2c3e50;
+  text-align: center;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: cadetblue;
+  cursor: pointer;
+}
+
+</style>
