@@ -9,7 +9,7 @@
         <sign-up @signingUp:signUp="handleSignup" @closeModal="toggleModal"/>
       </template>
       <template v-slot:leaderboardsSlot>
-        <leaderboards @closeModal="toggleModal" @modal="changeModal"/>
+        <leaderboards :loggedIn="loggedIn" @closeModal="toggleModal" @modal="changeModal"/>
       </template>
       <template v-slot:userSlot>
         <user @closeModal="toggleModal"/>
