@@ -42,11 +42,13 @@ export default {
     },
 
     nextImage() {
+      this.$refs.image.style.display = "none";
       this.imageUp = false;
       this.$refs.image.src = "https://via.placeholder.com/" + Math.floor(Math.random() * (1500 - 150 + 1) + 150);
     },
 
     imageLoaded() {
+      this.$refs.image.style.display = "block";
       this.imageUp = true;
     }
   },
@@ -77,6 +79,7 @@ export default {
 
 .image-container img{
   max-width: 100%;
+  min-height: 300px;
   height: auto;
   border: 1px solid #111111;
   max-height: 640px;
