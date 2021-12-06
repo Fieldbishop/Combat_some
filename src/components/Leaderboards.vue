@@ -9,13 +9,13 @@
         <td><b>Daily cup</b></td>
         <td>Nature</td>
         <td>01:23:45</td>
-        <td><button class="tableButton" @click="$emit('modal', 4)">JOIN</button></td> <!-- Napilla voidaan osallistua kisaan -->
+        <td v-if="loggedIn"><button class="tableButton" @click="$emit('modal', 4)">JOIN</button></td> <!-- Napilla voidaan osallistua kisaan -->
       </tr>
       <tr style="cursor: pointer">
         <td><b>Weekly cup</b></td>
         <td>Space</td>
         <td>01:23:45</td>
-        <td><button class="tableButton">JOIN</button></td>
+        <td v-if="loggedIn"><button class="tableButton">JOIN</button></td>
       </tr>
     </table>
   </div>
@@ -23,7 +23,19 @@
 
 <script>
 export default {
-  name: "leaderboards"
+  name: "leaderboards",
+  data() {
+    return {
+
+    }
+  },
+  props: {
+    loggedIn: Boolean,
+
+  },
+  methods: {
+
+  }
 }
 </script>
 
