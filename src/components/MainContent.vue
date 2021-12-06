@@ -2,12 +2,16 @@
   <div id="battle-content" class="content-container">
     <div class="cup-container">
       <div id="cup-image" class="image-container cup-content">
-        <img id="showcase_photo" src="../assets/test.png" alt="winner photo">
+        <div v-if="loggedIn" id="test-main" class="test">
+          <div @click="downVote" id="test-left" class="test"><h1>⇓</h1></div>
+          <div @click="upVote" id="test-right" class="test"><h1>⇑</h1></div>
+        </div>
+        <img ref="image" src="../assets/test2.png" alt="winner photo">
       </div>
       <div id="cup-string" class="cup-text cup-content">
-        <h3>Cup name</h3>
-        <h4>Cup category</h4>
-        <h4>01:02:22</h4>
+        <h3 ref="name">Cup name</h3>
+        <h4 ref="category">Cup category</h4>
+        <h4 ref="time">01:02:22</h4>
       </div>
     </div>
   </div>
@@ -26,7 +30,22 @@ export default {
 
   },
   methods: {
+    upVote() {
+      this.$emit('vote', 1);
+      this.nextImage();
+    },
 
+    downVote() {
+      this.$emit('vote', 0);
+      this.nextImage();
+    },
+
+    nextImage() {
+      this.$refs.image.src = "https://via.placeholder.com/" + Math.floor(Math.random() * (1500 - 150 + 1) + 150);
+    }
+  },
+  mounted() {
+    this.$refs.image.src = "https://via.placeholder.com/" + Math.floor(Math.random() * (1500 - 150 + 1) + 150);
   }
 }
 
@@ -59,6 +78,11 @@ export default {
   margin-bottom: 10px;
 }
 
+.image-container {
+  position: relative;
+  width: 100%;
+}
+
 .cup-container {
   max-width: 100%;
   display: flex;
@@ -72,6 +96,53 @@ export default {
   background-color: #404040;
   justify-content: space-around;
   color: white;
+}
+
+.test {
+  height: 100%;
+  top:0;
+  position: absolute;
+}
+
+#test-main {
+  left: 0;
+  width: 100%;
+}
+
+#test-left {
+  display: flex;
+  align-items: center;
+  left: 0;
+  width: 50%;
+}
+
+#test-left:hover {
+  cursor: pointer;
+}
+
+#test-main h1 {
+  display: none;
+  margin: 50px;
+}
+
+#test-left:hover h1 {
+  display: block;
+}
+
+#test-right:hover h1 {
+  display: block;
+}
+
+#test-right {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  right: 0;
+  width: 50%;
+}
+
+#test-right:hover {
+  cursor: pointer;
 }
 
 </style>
