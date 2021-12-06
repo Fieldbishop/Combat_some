@@ -83,7 +83,7 @@ export default {
   height: auto;
   border: 1px solid #111111;
   max-height: 640px;
-  display: block;
+  display: none;
   margin-bottom: 10px;
 }
 
