@@ -1,8 +1,14 @@
 <template>
   <div id="app">
-    <nav-bar :loggedIn="loggedIn" @signOut:="handleSignOut"/>
-    <log-in @loggin:login="handleLogin"/>
-    <sign-up @signingUp:signUp="handleSignup"/>
+    <nav-bar :loggedIn="loggedIn" @signOut:="handleSignOut" @modal="toggleModal"/> <!-- ':' emits, '@' listens -->
+    <modal-container v-if="modalVisible" :modalId="modalId">
+      <template v-slot:loginSlot>
+        <log-in @loggin:login="handleLogin" @closeModal="toggleModal"/>
+      </template>
+      <template v-slot:signupSlot>
+        <sign-up @signingUp:signUp="handleSignup" @closeModal="toggleModal"/>
+      </template>
+    </modal-container>
     <main-content/>
     <battle-popup v-if="loggedIn === true"/>
   </div>
@@ -14,10 +20,12 @@ import SignUp from "./components/SignUp";
 import LogIn from "./components/LogIn";
 import MainContent from "./components/MainContent";
 import BattlePopup from "./components/BattlePopup";
+import ModalContainer from "./components/ModalContainer";
 
 export default {
   name: 'App',
   components: {
+    ModalContainer,
     BattlePopup,
     MainContent,
     LogIn,
@@ -27,6 +35,8 @@ export default {
   data() {
     return {
       loggedIn: false,
+      modalVisible: false,
+      modalId: '',
 
     }
   },
@@ -35,6 +45,13 @@ export default {
   },
 
   methods: {
+
+    toggleModal(id) {
+      this.modalId = id;
+      this.modalVisible = !this.modalVisible;
+
+      console.log(this.modalId, this.modalVisible);
+    },
 
     handleLogin(login) {
       console.log(login);
@@ -51,13 +68,6 @@ export default {
 
 
 
-  }
-}
-
-window.onclick = function (event) {
-  if (event.target === document.getElementById("sign-up") || event.target === document.getElementById('log-in')) {
-    document.getElementById("sign-up").style.display = "none";
-    document.getElementById('log-in').style.display = 'none';
   }
 }
 
@@ -80,7 +90,6 @@ body {
 }
 
 .modal {
-  display: none;
   position: fixed;
   z-index: 1;
   left: 0;
@@ -135,7 +144,7 @@ body {
   box-sizing: border-box;
 }
 
-.modal-container button {
+.confirmButton {
   background-color: #04AA6D;
   color: white;
   padding: 14px 20px;
@@ -144,8 +153,22 @@ body {
   width: 50%;
 }
 
-.modal-container button:hover {
+.confirmButton:hover {
   background-color: #0ae494;
+  cursor: pointer;
+}
+
+.cancelButton {
+  background-color: #d33c40;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  width: 50%;
+}
+
+.cancelButton:hover {
+  background-color: #f72a1b;
   cursor: pointer;
 }
 

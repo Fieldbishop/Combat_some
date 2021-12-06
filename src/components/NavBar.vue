@@ -8,22 +8,22 @@
               <img id="logo" src="../assets/fist_logo.png" alt="imagebattle">
             </span>
           </a>
-          <a class="nav-link" id="leaderboards" href="#leaderboards"><b>Leaderboards</b></a>
+          <a class="nav-link" id="leaderboards" @click="$emit('modal', 0)"><b>Leaderboards</b></a>
         </div>
         <div id="navbar-user" class="navbar-right" v-if="loggedIn === false">
           <ul>
             <li>
-              <a class="nav-link" onclick="document.getElementById('log-in').style.display='block'"><b>Log in</b></a>
+              <a class="nav-link" @click="$emit('modal', 1)"><b>Log in</b></a>
             </li>
             <li>
-                <a class="nav-link" onclick="document.getElementById('sign-up').style.display='block'"><b>Sign up</b></a>
+                <a class="nav-link" @click="$emit('modal', 2)"><b>Sign up</b></a>
             </li>
           </ul>
         </div>
         <div id="navbar-logged" class="navbar-right" v-else>
           <ul>
             <li>
-              <a class="nav-link"><b>User</b></a>
+              <a class="nav-link" @click="$emit('modal', 3)"><b>User</b></a>
             </li>
             <li>
               <a class="nav-link" @click="signOut()"><b>Sign out</b></a> <!-- this.loggedIn = false -->
@@ -51,6 +51,7 @@ export default {
     signOut() {   // What should happen when logging off?
       this.$emit('signOut:');
     },
+
   }
 }
 </script>
