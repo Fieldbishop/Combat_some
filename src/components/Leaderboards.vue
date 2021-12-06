@@ -4,7 +4,7 @@
       <h3>Leaderboards</h3>
       <button class="close" type="button" @click="$emit('closeModal')">&times;</button>
     </div>
-    <table class="leaderboards-content">
+    <table class="leaderboards-content"> <!-- Painamalla jokaista 'tr' pääsee kyseiseen taisteluun, jos ei ole logged in, pyytää kirjautumaan sisään -->
       <tr style="cursor:pointer;">
         <td><b>Daily cup</b></td>
         <td>Nature</td>

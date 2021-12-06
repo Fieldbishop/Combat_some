@@ -11,6 +11,9 @@
       <template v-slot:leaderboardsSlot>
         <leaderboards @closeModal="toggleModal"/>
       </template>
+      <template v-slot:userSlot>
+        <user @closeModal="toggleModal"/>
+      </template>
     </modal-container>
     <main-content/>
     <battle-popup v-if="loggedIn === true"/>
@@ -25,10 +28,12 @@ import MainContent from "./components/MainContent";
 import BattlePopup from "./components/BattlePopup";
 import ModalContainer from "./components/ModalContainer";
 import Leaderboards from "./components/Leaderboards";
+import User from "./components/User";
 
 export default {
   name: 'App',
   components: {
+    User,
     Leaderboards,
     ModalContainer,
     BattlePopup,
@@ -39,7 +44,7 @@ export default {
   },
   data() {
     return {
-      loggedIn: false,
+      loggedIn: true,
       modalVisible: false,
       modalId: '',
 
