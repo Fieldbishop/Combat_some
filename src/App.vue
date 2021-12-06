@@ -8,6 +8,9 @@
       <template v-slot:signupSlot>
         <sign-up @signingUp:signUp="handleSignup" @closeModal="toggleModal"/>
       </template>
+      <template v-slot:leaderboardsSlot>
+        <leaderboards @closeModal="toggleModal"/>
+      </template>
     </modal-container>
     <main-content/>
     <battle-popup v-if="loggedIn === true"/>
@@ -21,10 +24,12 @@ import LogIn from "./components/LogIn";
 import MainContent from "./components/MainContent";
 import BattlePopup from "./components/BattlePopup";
 import ModalContainer from "./components/ModalContainer";
+import Leaderboards from "./components/Leaderboards";
 
 export default {
   name: 'App',
   components: {
+    Leaderboards,
     ModalContainer,
     BattlePopup,
     MainContent,
@@ -98,7 +103,7 @@ body {
   height: 100%;
   overflow: auto;
   background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0,0,0,0.5);
   padding-top: 60px;
 }
 
