@@ -18,7 +18,7 @@
         <join-battle @closeModal="toggleModal"/>
       </template>
     </modal-container>
-    <main-content :loggedIn="loggedIn"/>
+    <main-content :loggedIn="loggedIn" @vote="voteImage"/>
     <battle-popup v-if="loggedIn" @modal="toggleModal"/>
   </div>
 </template>
@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      loggedIn: true,
+      loggedIn: false,
       modalVisible: false,
       modalId: '',
 
@@ -83,6 +83,19 @@ export default {
       this.loggedIn = false;
     },
 
+    voteImage(vote) {
+      switch (vote) {
+        case 0:
+          console.log("Downvote");
+          break;
+        case 1:
+          console.log("Upvote");
+          break;
+        default:
+          console.log("Unknown");
+          break;
+      }
+    }
 
 
   }
