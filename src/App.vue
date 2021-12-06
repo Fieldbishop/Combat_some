@@ -9,14 +9,17 @@
         <sign-up @signingUp:signUp="handleSignup" @closeModal="toggleModal"/>
       </template>
       <template v-slot:leaderboardsSlot>
-        <leaderboards @closeModal="toggleModal"/>
+        <leaderboards @closeModal="toggleModal" @modal="changeModal"/>
       </template>
       <template v-slot:userSlot>
         <user @closeModal="toggleModal"/>
       </template>
+      <template v-slot:submitSlot>
+        <join-battle @closeModal="toggleModal"/>
+      </template>
     </modal-container>
-    <main-content/>
-    <battle-popup v-if="loggedIn === true"/>
+    <main-content :loggedIn="loggedIn"/>
+    <battle-popup v-if="loggedIn" @modal="toggleModal"/>
   </div>
 </template>
 
@@ -29,10 +32,12 @@ import BattlePopup from "./components/BattlePopup";
 import ModalContainer from "./components/ModalContainer";
 import Leaderboards from "./components/Leaderboards";
 import User from "./components/User";
+import JoinBattle from "./components/JoinBattle";
 
 export default {
   name: 'App',
   components: {
+    JoinBattle,
     User,
     Leaderboards,
     ModalContainer,
@@ -59,8 +64,10 @@ export default {
     toggleModal(id) {
       this.modalId = id;
       this.modalVisible = !this.modalVisible;
+    },
 
-      console.log(this.modalId, this.modalVisible);
+    changeModal(id) {
+      this.modalId = id;
     },
 
     handleLogin(login) {

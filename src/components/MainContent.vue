@@ -15,7 +15,19 @@
 
 <script>
 export default {
-  name: "MainContent"
+  name: "MainContent",
+  data() {
+    return {
+
+    }
+  },
+  props: {
+    loggedIn: Boolean,
+
+  },
+  methods: {
+
+  }
 }
 
 </script>

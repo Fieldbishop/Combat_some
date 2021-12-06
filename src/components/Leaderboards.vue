@@ -9,7 +9,7 @@
         <td><b>Daily cup</b></td>
         <td>Nature</td>
         <td>01:23:45</td>
-        <td><button class="tableButton">JOIN</button></td> <!-- Napilla voidaan osallistua kisaan -->
+        <td><button class="tableButton" @click="$emit('modal', 4)">JOIN</button></td> <!-- Napilla voidaan osallistua kisaan -->
       </tr>
       <tr style="cursor: pointer">
         <td><b>Weekly cup</b></td>
@@ -31,7 +31,7 @@ export default {
 
 .leaderboards-body {
   background-color: #eeeeee;
-  margin: 5% auto 15% auto;
+  margin: 5% auto 25vh auto;
   min-width: 400px;
   max-width: 60%;
   min-height: 500px;
@@ -67,6 +67,10 @@ td, th {
   padding: 10px 50px 10px 10px;
 }
 
+table {
+  width: 100%;
+}
+
 tr:nth-child(even) {
   background-color: #dddddd;
 }
@@ -85,6 +89,17 @@ td:last-child {
 .tableButton:hover {
   background-color: #0ae494;
   cursor: pointer;
+}
+
+@media (max-width: 780px) {
+  td, th {
+    padding: 0 25px 0 10px;
+    height: auto;
+  }
+
+  .tableButton {
+    padding: 20px 20px;
+  }
 }
 
 </style>

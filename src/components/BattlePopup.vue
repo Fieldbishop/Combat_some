@@ -1,5 +1,5 @@
 <template>
-  <div id="join-battle">
+  <div id="join-battle" @click="$emit('modal', 0)">
     <h3>BATTLE NOW</h3>
   </div>
 </template>
