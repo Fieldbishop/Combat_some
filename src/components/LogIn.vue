@@ -10,10 +10,11 @@
     psswd: '',
   }
 
+
  -->
 
 <template>
-  <div id="log-in" class="modal fade">
+  <div id="log-in" class="modal">
     <form class="modal-form" @submit.prevent="handleLogIn">
       <div class="modal-header">
         <h1>Log In</h1>

@@ -14,7 +14,7 @@
  -->
 
 <template>
-  <div id="sign-up" class="modal fade">
+  <div id="sign-up" class="modal">
     <form class="modal-form" @submit.prevent="handleSignUp">
       <div class="modal-header">
         <h1>Sign up</h1>

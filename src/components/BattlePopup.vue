@@ -1,6 +1,6 @@
 <template>
   <div id="join-battle">
-    <h3>JOIN NOW</h3>
+    <h3>BATTLE NOW</h3>
   </div>
 </template>
 
@@ -18,6 +18,7 @@ export default {
   transform: translateX(-50%);
 
   background-color: #0ae494;
+  border: 1px solid #111111;
   padding-right: 25px;
   padding-left: 25px;
   text-align: center;

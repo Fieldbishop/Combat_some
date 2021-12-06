@@ -8,7 +8,7 @@
               <img id="logo" src="../assets/fist_logo.png" alt="imagebattle">
             </span>
           </a>
-          <a class="nav-link" id="leaderboards" href="/leaderboards"><b>Leaderboards</b></a>
+          <a class="nav-link" id="leaderboards" href="#leaderboards"><b>Leaderboards</b></a>
         </div>
         <div id="navbar-user" class="navbar-right" v-if="loggedIn === false">
           <ul>
@@ -23,7 +23,7 @@
         <div id="navbar-logged" class="navbar-right" v-else>
           <ul>
             <li>
-              <a class="nav-link" href="/user"><b>User</b></a>
+              <a class="nav-link"><b>User</b></a>
             </li>
             <li>
               <a class="nav-link" @click="signOut()"><b>Sign out</b></a> <!-- this.loggedIn = false -->
@@ -99,9 +99,15 @@ export default {
   .nav-container {
     justify-content: space-around;
   }
+
+  .navbar-right .nav-link {
+    padding: 10px;
+  }
 }
 
+
 .navbar-right ul {
+  display: flex;
   align-items: center;
   list-style-type: none;
   margin: 0;
