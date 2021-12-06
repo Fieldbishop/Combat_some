@@ -14,11 +14,11 @@
  -->
 
 <template>
-  <div id="sign-up" class="modal">
+  <div id="sign-up">
     <form class="modal-form" @submit.prevent="handleSignUp">
       <div class="modal-header">
         <h1>Sign up</h1>
-        <button class="close" type="button" onclick="document.getElementById('sign-up').style.display = 'none'">&times;</button>
+        <button class="close" type="button" @click="$emit('closeModal')">&times;</button>
       </div>
       <div class="modal-container">
         <label><b>User name</b></label>
@@ -54,7 +54,8 @@
             required
         />
 
-        <button type="submit">Sign up</button>
+        <button type="submit" class="confirmButton">Sign up</button>
+        <button type="button" class="cancelButton" @click="$emit('closeModal')">Cancel</button>
       </div>
     </form>
   </div>

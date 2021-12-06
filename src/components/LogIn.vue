@@ -14,11 +14,11 @@
  -->
 
 <template>
-  <div id="log-in" class="modal">
+  <div id="log-in">
     <form class="modal-form" @submit.prevent="handleLogIn">
       <div class="modal-header">
         <h1>Log In</h1>
-        <button class="close" type="button" onclick="document.getElementById('log-in').style.display = 'none'">&times;</button>
+        <button class="close" type="button" @click="$emit('closeModal')">&times;</button>
       </div>
       <div class="modal-container">
         <label><b>User name</b></label>
@@ -39,7 +39,8 @@
             required
         />
 
-        <button type="submit">Log in</button>
+        <button type="submit" class="confirmButton">Log in</button>
+        <button type="button" class="cancelButton" @click="$emit('closeModal')">Cancel</button>
       </div>
     </form>
   </div>
@@ -66,7 +67,8 @@ export default {
         psswd: '',
       }
 
-    }
+    },
+
   },
 }
 </script>
