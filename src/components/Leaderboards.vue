@@ -9,11 +9,13 @@
         <td><b>Daily cup</b></td>
         <td>Nature</td>
         <td>01:23:45</td>
+        <td><button class="tableButton">JOIN</button></td> <!-- Napilla voidaan osallistua kisaan -->
       </tr>
       <tr style="cursor: pointer">
         <td><b>Weekly cup</b></td>
         <td>Space</td>
         <td>01:23:45</td>
+        <td><button class="tableButton">JOIN</button></td>
       </tr>
     </table>
   </div>
@@ -69,5 +71,20 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
+td:last-child {
+  padding: 10px 0 10px 10px;
+}
+
+.tableButton {
+  background-color: #04AA6D;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+}
+
+.tableButton:hover {
+  background-color: #0ae494;
+  cursor: pointer;
+}
 
 </style>
