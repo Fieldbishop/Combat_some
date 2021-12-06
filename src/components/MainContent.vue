@@ -6,9 +6,9 @@
           <div @click="downVote" id="test-left" class="test"><h1>⇓</h1></div>
           <div @click="upVote" id="test-right" class="test"><h1>⇑</h1></div>
         </div>
-        <img ref="image" src="../assets/test2.png" alt="winner photo">
+        <img ref="image" src="../assets/test2.png" alt="winner photo" @load="imageLoaded">
       </div>
-      <div id="cup-string" class="cup-text cup-content">
+      <div v-if="imageUp" id="cup-string" class="cup-text cup-content">
         <h3 ref="name">Cup name</h3>
         <h4 ref="category">Cup category</h4>
         <h4 ref="time">01:02:22</h4>
@@ -22,6 +22,7 @@ export default {
   name: "MainContent",
   data() {
     return {
+      imageUp: false,
 
     }
   },
@@ -41,7 +42,12 @@ export default {
     },
 
     nextImage() {
+      this.imageUp = false;
       this.$refs.image.src = "https://via.placeholder.com/" + Math.floor(Math.random() * (1500 - 150 + 1) + 150);
+    },
+
+    imageLoaded() {
+      this.imageUp = true;
     }
   },
   mounted() {
