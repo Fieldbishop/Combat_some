@@ -4,6 +4,7 @@
     <slot v-if="modalId === 1" name="loginSlot"></slot>
     <slot v-if="modalId === 2" name="signupSlot"></slot>
     <slot v-if="modalId === 3" name="userSlot"></slot>
+    <slot v-if="modalId === 4" name="submitSlot"></slot>
   </div>
 </template>
 
