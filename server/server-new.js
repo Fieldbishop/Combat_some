@@ -35,9 +35,7 @@ console.log(http.STATUS_CODES);
 // app.get('/events', function (req, res){})
 */
 
-app.options('*', cors(corsOptions), (req, res) => {
-
-});
+app.options('*', cors(corsOptions));
 app.post('/api/postTrigger', cors(corsOptions),function (req, res){
     console.log(req.headers);
     console.log(req.url);

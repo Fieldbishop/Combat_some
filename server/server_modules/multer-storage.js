@@ -2,7 +2,7 @@
 
 const multer = require('multer');
 const fs = require('fs');
-desiredPath = './public/images';
+let desiredPath = './public/images';
 const storage = multer.diskStorage({
   destination: function(req, file, callback){
     fs.mkdir(desiredPath, (err) =>{
