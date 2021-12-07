@@ -19,12 +19,12 @@ con.connect(function(err) {
     }
     console.log("Connected to MySQL");
 })
-async function mysqlQuery(sql, arguments, httpVerb) {
+async function mysqlQuery(sql, arg, httpVerb) {
     try {
-        if(arguments === undefined){
+        if(arg === undefined){
             return await query(sql);
         }
-        return await query(sql, [...arguments]);
+        return await query(sql, [...arg]);
     } catch (err){
         if(httpVerb){
             if(httpVerb.toLowerCase() === "post"){
