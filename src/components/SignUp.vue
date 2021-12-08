@@ -51,6 +51,7 @@
             placeholder="Repeat Password"
             id="pssw-check"
             @focus="clearPsswError"
+            ref="psswdCheck"
             required
         />
 
@@ -62,6 +63,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "SignUp",
   data() {
@@ -77,18 +80,30 @@ export default {
 
     // handleSignUp() tarkistaa että salasanat samat, lähettää $emit avulla olion App.vue:lle ja siistii elementit
     handleSignUp() {
-      if(this.signUp.psswd !== document.getElementById("pssw-check").value) {
+      if(this.signUp.psswd !== this.$refs.psswdCheck.value) {
         this.psswError = true;
         return;
       }
 
-      this.$emit('signingUp:signUp', this.signUp);
+      axios.post("http://localhost:8081/api/createUser", {
+        'username': this.signUp.name,
+        'password': this.signUp.psswd,
+      })
+      .then(response => {
+        if(response.status !== 200) {
+          alert("Error");
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      });
+
       this.signUp = {
         name: '',
         psswd: '',
       }
 
-      document.getElementById("pssw-check").value = "";
+      this.$refs.psswdCheck.value = "";
 
     },
 

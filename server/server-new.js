@@ -89,14 +89,14 @@ app.get('/api/leaderboard', function (req, res) {
 
 /** Inserts a new user into database on registration asynchronously */
 app.post('/api/createUser', cors(corsOptions), function (req, res) {
-    //console.log(req);
     (async () => {
         if (req.body) {
-            let query = "INSERT INTO user VALUES('?','?','0','0')";
+            let query = "INSERT INTO user VALUES('" + req.body.username + "','" + req.body.password + "','0','0');";
             let args = "";                                                  // mistäs nää nyt otettiin :)
             await mysql.mysqlQuery(query, args, "post");
             res.status(200).end();
         } else {
+            console.log("no");
             res.status(403).end();
         }
     })();
@@ -106,7 +106,7 @@ app.get('/api/test', (req, res) => {
     let query = "INSERT INTO user VALUES('?','?','0','0')";
     console.log(query);
     res.send(query)
-})
+});
 
 /**
  * Tästä eteenpäin turhaa.
