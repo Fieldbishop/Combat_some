@@ -3,9 +3,9 @@ const util = require("util");
 
 let con = mysql.createConnection({
     host: "127.0.0.1",
-    port: 3305,
+    port: 8081,
     user: "root",
-    password: "rootadming0g0600Yr$",
+    password: "password",
     database: "some_combat"
 });
 
@@ -21,7 +21,7 @@ con.connect(function(err) {
 })
 async function mysqlQuery(sql, arg, httpVerb) {
     try {
-        if(arg === undefined){
+        if(arg === undefined || arg === null){
             return await query(sql);
         }
         return await query(sql, [...arg]);

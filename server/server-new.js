@@ -62,6 +62,24 @@ app.post('/api/image', cors(corsOptions), function(req,res){
     })()
 })
 
+// L juttuja
+app.get('/api/leaderboard',function(req,res){
+    (async () => {
+        if(req.body){
+            let query = "SELECT userName FROM user ORDER BY wins DESC";
+            let leaderboard = await mysql.mysqlQuery(query, null, "get");
+            res.send(leaderboard);
+            res.status(200).end();
+        } else{
+            res.status(403).end();
+        }
+    })();
+});
+
+app.get('/api/test', (req,res) =>{
+    res.send("testitesti")
+})
+
 /**
  * Tästä eteenpäin turhaa.
  *
