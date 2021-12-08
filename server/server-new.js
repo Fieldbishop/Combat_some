@@ -62,7 +62,18 @@ app.post('/api/image', cors(corsOptions), function (req, res) {
 })
 
 // L juttuja
-/** Returns a leaderboard dataset from the database */
+/** Uploads an image */
+app.post("/api/upload_file",function(req,res){
+    let upload = multer({storage : storage}).single('file');
+    upload(req,res,function (err){
+        if(err){
+            return res.end("Error uploading file");
+        }
+        res.end("File uploaded successfully");
+    });
+});
+
+/** Returns a leaderboard dataset from the database asynchronously */
 app.get('/api/leaderboard', function (req, res) {
     (async () => {
         if (req.body) {
@@ -76,13 +87,13 @@ app.get('/api/leaderboard', function (req, res) {
     })();
 });
 
-/** Inserts a new user into database on registration */
+/** Inserts a new user into database on registration asynchronously */
 app.post('/api/createUser', cors(corsOptions), function (req, res) {
     //console.log(req);
     (async () => {
         if (req.body) {
             let query = "INSERT INTO user VALUES('?','?','0','0')";
-            let args = "";                                       // mistäs nää nyt otettiin :)
+            let args = "";                                                  // mistäs nää nyt otettiin :)
             await mysql.mysqlQuery(query, args, "post");
             res.status(200).end();
         } else {
