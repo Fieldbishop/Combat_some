@@ -92,8 +92,11 @@ app.post('/api/createUser', cors(corsOptions), function (req, res) {
     (async () => {
         if (req.body) {
             let query = "INSERT INTO user VALUES('" + req.body.username + "','" + req.body.password + "','0','0');";
-            let args = "";                                                  // mistäs nää nyt otettiin :)
-            await mysql.mysqlQuery(query, args, "post");
+            let paluu = await mysql.mysqlQuery(query, null, "post");
+            if(paluu == null){
+                res.end("Käyttäjän lisäys ei onnistunut");
+                res.status(403).end();
+            }
             res.status(200).end();
         } else {
             console.log("no");

@@ -30,6 +30,7 @@ async function mysqlQuery(sql, arg, httpVerb) {
         if (httpVerb) {
             if (httpVerb.toLowerCase() === "post") {
                 console.log("Post wasn't successful..")
+                return null;
             } else if (httpVerb.toLowerCase() === "get") {
                 console.log("Failed to get..")
             }
