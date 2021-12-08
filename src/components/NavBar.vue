@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     signOut() {   // What should happen when logging off?
-      this.$emit('signOut:');
+      this.$emit('signOut');
     },
 
   }

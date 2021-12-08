@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "LogIn",
   data() {
@@ -61,11 +63,18 @@ export default {
 
     handleLogIn() {
 
-      this.$emit('loggin:login', this.login);
-      this.login = {
-        name: '',
-        psswd: '',
-      }
+      axios.get("http://localhost:8081/api/login", {
+        'username': this.login.name,
+        'password': this.login.psswd,
+      })
+      .then(response => {
+        this.login = {
+          name: '',
+          psswd: '',
+        }
+      })
+
+      this.$emit('login', this.login);
 
     },
 

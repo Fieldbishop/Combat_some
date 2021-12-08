@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <nav-bar :loggedIn="loggedIn" @signOut:="handleSignOut" @modal="toggleModal"/> <!-- ':' emits, '@' listens -->
+    <nav-bar :loggedIn="loggedIn" @signOut="handleSignOut" @modal="toggleModal"/> <!-- ':' emits, '@' listens -->
     <modal-container v-if="modalVisible" :modalId="modalId">
       <template v-slot:loginSlot>
-        <log-in @loggin:login="handleLogin" @closeModal="toggleModal"/>
+        <log-in @login="handleLogin" @closeModal="toggleModal"/>
       </template>
       <template v-slot:signupSlot>
-        <sign-up @signingUp:signUp="handleSignup" @closeModal="toggleModal"/>
+        <sign-up @signUp="handleSignup" @closeModal="toggleModal"/>
       </template>
       <template v-slot:leaderboardsSlot>
         <leader-boards :loggedIn="loggedIn" @closeModal="toggleModal" @modal="changeModal"/>
@@ -75,8 +75,8 @@ export default {
       this.loggedIn = true;
     },
 
-    handleSignup(signUp) {
-      console.log(signUp);
+    handleSignup() {
+      console.log("Signup");
     },
 
     handleSignOut() {
