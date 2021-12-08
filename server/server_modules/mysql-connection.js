@@ -3,7 +3,7 @@ const util = require("util");
 
 let con = mysql.createConnection({
     host: "127.0.0.1",
-    port: 8081,
+    port: 3306,
     user: "root",
     password: "password",
     database: "some_combat"
