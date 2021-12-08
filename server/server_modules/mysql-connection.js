@@ -2,9 +2,10 @@ const mysql = require("mysql");
 const util = require("util");
 
 let con = mysql.createConnection({
-    host: "localhost",
+    host: "127.0.0.1",
+    port: 3306,
     user: "root",
-    password: "root",
+    password: "password",
     database: "some_combat"
 });
 
@@ -29,6 +30,7 @@ async function mysqlQuery(sql, arg, httpVerb) {
         if (httpVerb) {
             if (httpVerb.toLowerCase() === "post") {
                 console.log("Post wasn't successful..")
+                return null;
             } else if (httpVerb.toLowerCase() === "get") {
                 console.log("Failed to get..")
             }

@@ -36,7 +36,7 @@ export default {
       let formData = new FormData();
       formData.append("image", files[0]);
       console.log(files[0]);
-      axios.post('http://127.0.0.1:8081/api/image', formData
+      axios.post('http://127.0.0.1:8081/api/upload_file', formData
       ,{
         headers: {
           'Content-type':'image/*'

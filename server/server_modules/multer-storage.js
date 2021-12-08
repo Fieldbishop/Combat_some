@@ -1,6 +1,16 @@
 const multer = require('multer');
 const fs = require('fs');
 let desiredPath = './public/images';
+
+const storage = multer.diskStorage({
+    destination: (req,file,cb) => {
+        cb(null,desiredPath);
+    },
+    filename: (req,file,cb) =>{
+        cb(null,Date.now() + "-" +file.originalname);
+    }
+});
+/*
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
         fs.mkdir(desiredPath, (err) => {
@@ -25,4 +35,5 @@ const storage = multer.diskStorage({
         callback(null, file.name + "-" + fileLength);
     }
 })
+ */
 module.exports = storage;

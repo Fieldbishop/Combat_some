@@ -10,6 +10,8 @@ const mysql = require('./server_modules/mysql-connection');
 const storage = require('./server_modules/multer-storage');
 const corsOptions = require('./server_modules/cors-local');
 
+let upload = multer({storage : storage});
+
 // for parsing application/json
 app.use(express.json());
 
@@ -62,14 +64,19 @@ app.post('/api/image', cors(corsOptions), function (req, res) {
 })
 
 // L juttuja
+
+app.post("/api/upload_file", upload.single('image'),(req,res) =>{
+    console.log(req.file);
+    res.send("File upload was successful");
+});
 /** Uploads an image */
-app.post("/api/upload_file",function(req,res){
-    let upload = multer({storage : storage}).single('file');
+app.post("/api/upasdasd",function(req,res){
+
     upload(req,res,function (err){
         if(err){
-            return res.end("Error uploading file");
+            return res.send("Error uploading file");
         }
-        res.end("File uploaded successfully");
+        res.send("File uploaded successfully");
     });
 });
 
@@ -92,8 +99,11 @@ app.post('/api/createUser', cors(corsOptions), function (req, res) {
     (async () => {
         if (req.body) {
             let query = "INSERT INTO user VALUES('" + req.body.username + "','" + req.body.password + "','0','0');";
-            let args = "";                                                  // mistäs nää nyt otettiin :)
-            await mysql.mysqlQuery(query, args, "post");
+            let paluu = await mysql.mysqlQuery(query, null, "post");
+            if(paluu == null){
+                res.end("Käyttäjän lisäys ei onnistunut");
+                res.status(403).end();
+            }
             res.status(200).end();
         } else {
             console.log("no");
