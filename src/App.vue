@@ -9,13 +9,13 @@
         <sign-up @signingUp:signUp="handleSignup" @closeModal="toggleModal"/>
       </template>
       <template v-slot:leaderboardsSlot>
-        <leaderboards :loggedIn="loggedIn" @closeModal="toggleModal" @modal="changeModal"/>
+        <leader-boards :loggedIn="loggedIn" @closeModal="toggleModal" @modal="changeModal"/>
       </template>
       <template v-slot:userSlot>
         <user @closeModal="toggleModal"/>
       </template>
       <template v-slot:submitSlot>
-        <join-battle @closeModal="toggleModal"/>
+        <image-uploader @closeModal="toggleModal"/>
       </template>
     </modal-container>
     <main-content :loggedIn="loggedIn" @vote="voteImage"/>
@@ -30,16 +30,16 @@ import LogIn from "./components/LogIn";
 import MainContent from "./components/MainContent";
 import BattlePopup from "./components/BattlePopup";
 import ModalContainer from "./components/ModalContainer";
-import Leaderboards from "./components/Leaderboards";
 import User from "./components/User";
-import JoinBattle from "./components/JoinBattle";
+import ImageUploader from "./components/ImageUploader";
+import LeaderBoards from "./components/Leaderboards";
 
 export default {
   name: 'App',
   components: {
-    JoinBattle,
+    LeaderBoards,
+    ImageUploader,
     User,
-    Leaderboards,
     ModalContainer,
     BattlePopup,
     MainContent,

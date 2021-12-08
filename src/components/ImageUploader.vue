@@ -1,12 +1,15 @@
 <template>
   <section>
-    <header>
-      <title>Upload Image</title>
-    </header>
-    <div class="dropArea" @drop.prevent="catchFile($event)" @dragover.prevent id="dropArea" @click="triggerInput">
-      Click or Drop to add Image Here!
+    <div class="dropContainer">
+      <div class="leaderboards-header">
+        <h3>Upload image</h3>
+        <button class="close" type="button" @click="$emit('closeModal')">&times;</button>
+      </div>
+      <div class="dropArea" @drop.prevent="catchFile($event)" @dragover.prevent id="dropArea" @click="triggerInput">
+        Click or Drop to add Image Here!
+      </div>
+      <input type="file" style="display: none" @change="catchFile($event)" ref="catchFile" accept="image/*">
     </div>
-    <input type="file" style="display: none" @change="catchFile($event)" ref="catchFile" accept="image/*">
   </section>
 </template>
 
@@ -58,9 +61,26 @@ export default {
 <style scoped>
   .dropArea{
     width: 50%;
-    margin: auto;
+
     border: dashed 2px darkgray;
     color: darkgray;
     padding: 5em;
+
   }
+
+  .dropContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    background-color: #fefefe;
+    margin: 5% auto 15% auto;
+    padding-bottom: 20px;
+    position: relative;
+  }
+
+  .leaderboards-header .close {
+    top: 10px;
+  }
+
 </style>
