@@ -18,9 +18,9 @@
     <form class="modal-form" @submit.prevent="handleSignUp">
       <div class="modal-header">
         <h1>Sign up</h1>
-        <button class="close" type="button" @click="$emit('closeModal')">&times;</button>
+        <button class="close" type="button" @click="handleSignupClose">&times;</button>
       </div>
-      <div class="modal-container">
+      <div v-if="successSign" class="modal-container">
         <label><b>User name</b></label>
         <input
             type="text"
@@ -58,6 +58,9 @@
         <button type="submit" class="confirmButton">Sign up</button>
         <button type="button" class="cancelButton" @click="$emit('closeModal')">Cancel</button>
       </div>
+      <div v-else class="modal-container">
+        <h3>Sign up successful</h3>
+      </div>
     </form>
   </div>
 </template>
@@ -70,6 +73,7 @@ export default {
   data() {
     return {
       psswError: false,
+      successSign: true,
       signUp: {
         name: '',
         psswd: '',
@@ -90,20 +94,26 @@ export default {
         'password': this.signUp.psswd,
       })
       .then(response => {
+
+        this.signUp = {
+          name: '',
+          psswd: '',
+        }
+
+        this.$refs.psswdCheck.value = "";
+
         if(response.status !== 200) {
           alert("Error");
+        } else {
+          console.log("Done")
+          this.successSign = false;
+          this.$emit("signUp");
         }
+
       })
       .catch(error => {
         console.log(error)
       });
-
-      this.signUp = {
-        name: '',
-        psswd: '',
-      }
-
-      this.$refs.psswdCheck.value = "";
 
     },
 
@@ -111,7 +121,10 @@ export default {
       this.psswError = false;
     },
 
-
+    handleSignupClose() {
+      this.successSign = false;
+      this.$emit('closeModal');
+    }
 
   },
 }
