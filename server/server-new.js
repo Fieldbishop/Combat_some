@@ -7,10 +7,10 @@ const cors = require('cors');
 const multer = require('multer');
 
 const mysql = require('./server_modules/mysql-connection');
-const storage = require('./server_modules/multer-storage');
+const storageProcess = require('./server_modules/multer-storage');
 const corsOptions = require('./server_modules/cors-local');
 
-let upload = multer({storage : storage});
+const upload = multer({storage : storageProcess}).single('image');
 
 // for parsing application/json
 app.use(express.json());
@@ -19,7 +19,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 // for parsing multipart/form-data
-app.use(multer({storage: storage}).single('image'));
 //app.use(express.static('public'));
 
 
@@ -36,7 +35,7 @@ console.log(http.STATUS_CODES);
 // app.get('/events', function (req, res){})
 */
 
-app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions), ()=>{});
 app.post('/api/postTrigger', cors(corsOptions), function (req, res) {
     console.log(req.headers);
     console.log(req.url);
@@ -65,9 +64,14 @@ app.post('/api/image', cors(corsOptions), function (req, res) {
 
 // L juttuja
 
-app.post("/api/upload_file", upload.single('image'),(req,res) =>{
-    console.log(req.file);
-    res.send("File upload was successful");
+app.post("/api/upload_file",cors(corsOptions),(req,res) =>{
+    upload(req,res,function (err){
+        if(err){
+            return res.send("Error uploading file" + err).status(500);
+        }
+        console.log(req.file);
+        res.status( 200).end();
+    });
 });
 /** Uploads an image */
 app.post("/api/upasdasd",function(req,res){
