@@ -2,10 +2,9 @@ const mysql = require("mysql");
 const util = require("util");
 
 let con = mysql.createConnection({
-    host: "127.0.0.1",
-    port: 8081,
+    host: "localhost",
     user: "root",
-    password: "password",
+    password: "root",
     database: "some_combat"
 });
 
