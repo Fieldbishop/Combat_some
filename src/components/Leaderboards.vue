@@ -47,8 +47,6 @@ export default {
         this.times.push(this.countdown(this.leaderboards[i].endDate))
       }
 
-      console.log("Run")
-
       if(!this.alive) {
         clearInterval(this.interval);
       }
