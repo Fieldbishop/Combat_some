@@ -118,7 +118,6 @@ app.post('/api/createUser', cors(corsOptions), function (req, res) {
 
             res.send({
                 user: userJson,
-                token: jwtSignUser(userJson)
             });
         } else {
             console.log("no");
@@ -154,18 +153,41 @@ app.post('/api/login', cors(corsOptions), async (req, res) => {
     }
 });
 
-app.get('/api/test', (req, res) => {
-    let query = "INSERT INTO user VALUES('?','?','0','0')";
-    console.log(query);
-    res.send(query)
+app.get('/login/test', (req, res) => {
+    let user = req.body;
+
+    const token = jwtSignUser(user);
+
+    res.json({
+        token: token
+    })
 });
 
+app.post('/api/verify', cors(corsOptions), (req, res) => {
+    try {
+        const token = req.body.token;
+        const tokenDecoded = jwt.verify(token, "secret");
+        return res.json({
+            error: false,
+            data: tokenDecoded,
+            verify: true
+        });
+    } catch (error) {
+        res.json({
+            error: true,
+            data: error,
+            verify: false
+        })
+    }
+})
+
 function jwtSignUser(user) {
-    const thirtyMin = 60 * 30;
+    const fiveMin = 60 * 5;
     return jwt.sign(user, "secret", {
-        expiresIn: thirtyMin
+        expiresIn: fiveMin
     })
 }
+
 
 /**
  * Tästä eteenpäin turhaa.

@@ -3,7 +3,7 @@
     <nav-bar :loggedIn="userState.loggedIn" @signOut="handleSignOut" @modal="toggleModal"/> <!-- ':' emits, '@' listens -->
     <modal-container v-if="modalVisible" :modalId="modalId">
       <template v-slot:loginSlot>
-        <log-in @login="handleLogin" @closeModal="toggleModal"/>
+        <log-in @login="handleLogin" @closeModal="toggleModal" ref="login"/>
       </template>
       <template v-slot:signupSlot>
         <sign-up @signUp="handleSignup" @closeModal="toggleModal"/>
@@ -33,6 +33,7 @@ import ModalContainer from "./components/ModalContainer";
 import User from "./components/User";
 import ImageUploader from "./components/ImageUploader";
 import LeaderBoards from "./components/Leaderboards";
+import axios from "axios";
 
 export default {
   name: 'App',
@@ -61,7 +62,7 @@ export default {
     }
   },
   mounted() {
-
+    this.checkToken(document.cookie);
   },
 
   methods: {
@@ -76,14 +77,19 @@ export default {
     },
 
     handleLogin(data) {
-      this.userState.loggedIn = true;
+      this.justLogin();
       this.setToken(data.token);
-      this.userState.user = data.user;
+      this.userState.user = data.user.username;
       this.toggleModal(null);
+    },
+
+    justLogin(){
+      this.userState.loggedIn = true;
     },
 
     setToken(token) {
       this.userState.token = token;
+      document.cookie = `token=${token}`;
     },
 
     handleSignup() {
@@ -108,8 +114,24 @@ export default {
           console.log("Unknown");
           break;
       }
-    }
+    },
 
+    async checkToken(cookie) {
+      let token = cookie.split("token=")[1];
+      try {
+        console.log("Trying with", token);
+        await axios.post("http://localhost:8081/api/verify", {
+          "token": token
+        }).then(response => {
+          console.log(response.data);
+          if(!response.data.error) {
+            this.justLogin()
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
   }
 }

@@ -79,7 +79,6 @@ export default {
           password: this.login.psswd,
         })
         .then(response => {
-          console.log(response.data);
           this.login = {
             name: '',
             psswd: '',
