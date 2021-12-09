@@ -121,11 +121,9 @@ export default {
     async checkToken(cookie) {
       let token = cookie.split("token=")[1];
       try {
-        console.log("Trying with", token);
         await axios.post("http://localhost:8081/api/verify", {
           "token": token
         }).then(response => {
-          console.log(response.data);
           if(!response.data.error) {
             this.justLogin()
           } else {
