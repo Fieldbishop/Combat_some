@@ -68,11 +68,13 @@ export default {
   methods: {
 
     toggleModal(id) {
+      this.checkToken(document.cookie);
       this.modalId = id;
       this.modalVisible = !this.modalVisible;
     },
 
     changeModal(id) {
+      this.checkToken(document.cookie);
       this.modalId = id;
     },
 
@@ -119,13 +121,13 @@ export default {
     async checkToken(cookie) {
       let token = cookie.split("token=")[1];
       try {
-        console.log("Trying with", token);
         await axios.post("http://localhost:8081/api/verify", {
           "token": token
         }).then(response => {
-          console.log(response.data);
           if(!response.data.error) {
             this.justLogin()
+          } else {
+            this.handleSignOut()
           }
         });
       } catch (error) {
