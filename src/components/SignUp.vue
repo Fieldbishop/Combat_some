@@ -112,7 +112,6 @@ export default {
         if(response.data === "dublicate") {  //Errorin sattuessa response.data palauttaa dublicate ja viesti näytetään
           this.usernameError = true;
         } else {
-          console.log("Done")
           this.successSign = false;
           this.$emit("signUp");
         }
