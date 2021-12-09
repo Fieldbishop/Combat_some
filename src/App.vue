@@ -68,11 +68,13 @@ export default {
   methods: {
 
     toggleModal(id) {
+      this.checkToken(document.cookie);
       this.modalId = id;
       this.modalVisible = !this.modalVisible;
     },
 
     changeModal(id) {
+      this.checkToken(document.cookie);
       this.modalId = id;
     },
 
@@ -126,6 +128,8 @@ export default {
           console.log(response.data);
           if(!response.data.error) {
             this.justLogin()
+          } else {
+            this.handleSignOut()
           }
         });
       } catch (error) {
