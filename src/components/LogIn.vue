@@ -79,12 +79,12 @@ export default {
           password: this.login.psswd,
         })
         .then(response => {
-          console.log(response);
+          console.log(response.data);
           this.login = {
             name: '',
             psswd: '',
           }
-          this.$emit('login');
+          this.$emit('login', response.data);
         })
       } catch (error) {
         console.log(error.response.data.error);

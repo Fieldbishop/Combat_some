@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav-bar :loggedIn="loggedIn" @signOut="handleSignOut" @modal="toggleModal"/> <!-- ':' emits, '@' listens -->
+    <nav-bar :loggedIn="userState.loggedIn" @signOut="handleSignOut" @modal="toggleModal"/> <!-- ':' emits, '@' listens -->
     <modal-container v-if="modalVisible" :modalId="modalId">
       <template v-slot:loginSlot>
         <log-in @login="handleLogin" @closeModal="toggleModal"/>
@@ -9,7 +9,7 @@
         <sign-up @signUp="handleSignup" @closeModal="toggleModal"/>
       </template>
       <template v-slot:leaderboardsSlot>
-        <leader-boards :loggedIn="loggedIn" @closeModal="toggleModal" @modal="changeModal"/>
+        <leader-boards :loggedIn="userState.loggedIn" @closeModal="toggleModal" @modal="changeModal"/>
       </template>
       <template v-slot:userSlot>
         <user @closeModal="toggleModal"/>
@@ -18,8 +18,8 @@
         <image-uploader @closeModal="toggleModal"/>
       </template>
     </modal-container>
-    <main-content :loggedIn="loggedIn" @vote="voteImage"/>
-    <battle-popup v-if="loggedIn" @modal="toggleModal"/>
+    <main-content :loggedIn="userState.loggedIn" @vote="voteImage"/>
+    <battle-popup v-if="userState.loggedIn" @modal="toggleModal"/>
   </div>
 </template>
 
@@ -52,6 +52,11 @@ export default {
       loggedIn: false,
       modalVisible: false,
       modalId: '',
+      userState: {
+        token: null,
+        user: null,
+        loggedIn: false,
+      }
 
     }
   },
@@ -70,17 +75,25 @@ export default {
       this.modalId = id;
     },
 
-    handleLogin() {
-      this.loggedIn = true;
+    handleLogin(data) {
+      this.userState.loggedIn = true;
+      this.setToken(data.token);
+      this.userState.user = data.user;
       this.toggleModal(null);
     },
 
+    setToken(token) {
+      this.userState.token = token;
+    },
+
     handleSignup() {
-      console.log("Signup");
+
     },
 
     handleSignOut() {
-      this.loggedIn = false;
+      this.userState.loggedIn = false;
+      this.setToken(null);
+      this.userState.user = null;
     },
 
     voteImage(vote) {
