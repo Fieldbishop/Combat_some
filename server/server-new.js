@@ -70,7 +70,12 @@ app.post("/api/upload_file",cors(corsOptions),(req,res) =>{
             return res.send("Error uploading file" + err).status(500);
         }
         console.log(req.file);
-        res.status( 200).end();
+        (async () =>{
+            let response = await mysql.mysqlQuery("INSERT INTO battle_submission VALUES(?, ?, ?, ?, ?)"
+                , [0, req.file.path, 0, "usernameHere",0])
+            console.log(response);
+            res.status( 200).end();
+        })()
     });
 });
 /** Uploads an image */
