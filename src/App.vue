@@ -70,9 +70,9 @@ export default {
       this.modalId = id;
     },
 
-    handleLogin(login) {
-      console.log(login);
+    handleLogin() {
       this.loggedIn = true;
+      this.toggleModal(null);
     },
 
     handleSignup() {
@@ -200,6 +200,11 @@ body {
 .cancelButton:hover {
   background-color: #f72a1b;
   cursor: pointer;
+}
+
+.error-message {
+  color: #d33c40;
+  font-weight: 500;
 }
 
 </style>

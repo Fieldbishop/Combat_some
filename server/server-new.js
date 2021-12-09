@@ -6,6 +6,8 @@ const path = require("path");
 const cors = require('cors');
 const multer = require('multer');
 
+const jwt = require('jsonwebtoken');
+
 const mysql = require('./server_modules/mysql-connection');
 const storage = require('./server_modules/multer-storage');
 const corsOptions = require('./server_modules/cors-local');
@@ -98,13 +100,26 @@ app.get('/api/leaderboard', function (req, res) {
 app.post('/api/createUser', cors(corsOptions), function (req, res) {
     (async () => {
         if (req.body) {
-            let query = "INSERT INTO user VALUES('" + req.body.username + "','" + req.body.password + "','0','0');";
+            const {username, password} = req.body;
+            let query = "INSERT INTO user VALUES('" + username + "','" + password + "','0','0');";
             let paluu = await mysql.mysqlQuery(query, null, "post");
+
+
+            //Huono tapa katsoa onko samoja käyttäjänimiä
             if(paluu == null){
-                res.end("Käyttäjän lisäys ei onnistunut");
+                res.end("dublicate");
                 res.status(403).end();
             }
-            res.status(200).end();
+
+            const userJson = {
+                'username': username,
+                'password': password
+            }
+
+            res.send({
+                user: userJson,
+                token: jwtSignUser(userJson)
+            });
         } else {
             console.log("no");
             res.status(403).end();
@@ -112,11 +127,45 @@ app.post('/api/createUser', cors(corsOptions), function (req, res) {
     })();
 });
 
+app.post('/api/login', cors(corsOptions), async (req, res) => {
+    try {
+        const {username, password} = req.body;
+        let query = "SELECT count(*) AS 'found' FROM user WHERE userName = '" + username + "' AND password = '" + password + "'";
+
+        const paluu = await mysql.mysqlQuery(query, null, "post");
+
+        if(paluu[0].found === 0){
+            return res.status(403).send({
+                error: "Login information incorrect"
+            });
+        }
+
+        const userJson = {
+            'username': username,
+            'password': password
+        }
+
+        res.send({
+            user: userJson,
+            token: jwtSignUser(userJson)
+        });
+    } catch (err) {
+        console.log(err);
+    }
+});
+
 app.get('/api/test', (req, res) => {
     let query = "INSERT INTO user VALUES('?','?','0','0')";
     console.log(query);
     res.send(query)
 });
+
+function jwtSignUser(user) {
+    const thirtyMin = 60 * 30;
+    return jwt.sign(user, "secret", {
+        expiresIn: thirtyMin
+    })
+}
 
 /**
  * Tästä eteenpäin turhaa.
