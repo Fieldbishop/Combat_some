@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <nav-bar :loggedIn="loggedIn" @signOut="handleSignOut" @modal="toggleModal"/> <!-- ':' emits, '@' listens -->
+    <nav-bar :loggedIn="userState.loggedIn" @signOut="handleSignOut" @modal="toggleModal"/> <!-- ':' emits, '@' listens -->
     <modal-container v-if="modalVisible" :modalId="modalId">
       <template v-slot:loginSlot>
-        <log-in @login="handleLogin" @closeModal="toggleModal"/>
+        <log-in @login="handleLogin" @closeModal="toggleModal" ref="login"/>
       </template>
       <template v-slot:signupSlot>
         <sign-up @signUp="handleSignup" @closeModal="toggleModal"/>
       </template>
       <template v-slot:leaderboardsSlot>
-        <leader-boards :loggedIn="loggedIn" @closeModal="toggleModal" @modal="changeModal"/>
+        <leader-boards :loggedIn="userState.loggedIn" @closeModal="toggleModal" @modal="changeModal"/>
       </template>
       <template v-slot:userSlot>
         <user @closeModal="toggleModal"/>
@@ -18,8 +18,8 @@
         <image-uploader @closeModal="toggleModal"/>
       </template>
     </modal-container>
-    <main-content :loggedIn="loggedIn" @vote="voteImage"/>
-    <battle-popup v-if="loggedIn" @modal="toggleModal"/>
+    <main-content :loggedIn="userState.loggedIn" @vote="voteImage"/>
+    <battle-popup v-if="userState.loggedIn" @modal="toggleModal"/>
   </div>
 </template>
 
@@ -33,6 +33,7 @@ import ModalContainer from "./components/ModalContainer";
 import User from "./components/User";
 import ImageUploader from "./components/ImageUploader";
 import LeaderBoards from "./components/Leaderboards";
+import axios from "axios";
 
 export default {
   name: 'App',
@@ -52,11 +53,16 @@ export default {
       loggedIn: false,
       modalVisible: false,
       modalId: '',
+      userState: {
+        token: null,
+        user: null,
+        loggedIn: false,
+      }
 
     }
   },
   mounted() {
-
+    this.checkToken(document.cookie);
   },
 
   methods: {
@@ -70,17 +76,30 @@ export default {
       this.modalId = id;
     },
 
-    handleLogin(login) {
-      console.log(login);
-      this.loggedIn = true;
+    handleLogin(data) {
+      this.justLogin();
+      this.setToken(data.token);
+      this.userState.user = data.user.username;
+      this.toggleModal(null);
+    },
+
+    justLogin(){
+      this.userState.loggedIn = true;
+    },
+
+    setToken(token) {
+      this.userState.token = token;
+      document.cookie = `token=${token}`;
     },
 
     handleSignup() {
-      console.log("Signup");
+
     },
 
     handleSignOut() {
-      this.loggedIn = false;
+      this.userState.loggedIn = false;
+      this.setToken(null);
+      this.userState.user = null;
     },
 
     voteImage(vote) {
@@ -95,8 +114,24 @@ export default {
           console.log("Unknown");
           break;
       }
-    }
+    },
 
+    async checkToken(cookie) {
+      let token = cookie.split("token=")[1];
+      try {
+        console.log("Trying with", token);
+        await axios.post("http://localhost:8081/api/verify", {
+          "token": token
+        }).then(response => {
+          console.log(response.data);
+          if(!response.data.error) {
+            this.justLogin()
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
   }
 }
@@ -200,6 +235,11 @@ body {
 .cancelButton:hover {
   background-color: #f72a1b;
   cursor: pointer;
+}
+
+.error-message {
+  color: #d33c40;
+  font-weight: 500;
 }
 
 </style>

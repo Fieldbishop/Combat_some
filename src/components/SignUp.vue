@@ -22,11 +22,17 @@
       </div>
       <div v-if="successSign" class="modal-container">
         <label><b>User name</b></label>
+
+        <p v-if="usernameError" class="error-message">
+          Username already taken
+        </p>
+
         <input
             type="text"
             placeholder="Username"
             name="sign-name"
             v-model="signUp.name"
+            @focus="clearError"
             required
         />
 
@@ -36,7 +42,7 @@
             placeholder="Password"
             name="sign-pssw"
             v-model="signUp.psswd"
-            @focus="clearPsswError"
+            @focus="clearError"
             required
         />
 
@@ -50,7 +56,7 @@
             type="password"
             placeholder="Repeat Password"
             id="pssw-check"
-            @focus="clearPsswError"
+            @focus="clearError"
             ref="psswdCheck"
             required
         />
@@ -72,6 +78,7 @@ export default {
   name: "SignUp",
   data() {
     return {
+      usernameError: false,
       psswError: false,
       successSign: true,
       signUp: {
@@ -83,15 +90,15 @@ export default {
   methods: {
 
     // handleSignUp() tarkistaa että salasanat samat, lähettää $emit avulla olion App.vue:lle ja siistii elementit
-    handleSignUp() {
+    async handleSignUp() {
       if(this.signUp.psswd !== this.$refs.psswdCheck.value) {
         this.psswError = true;
         return;
       }
 
-      axios.post("http://localhost:8081/api/createUser", {
-        'username': this.signUp.name,
-        'password': this.signUp.psswd,
+      await axios.post("http://localhost:8081/api/createUser", {
+        username: this.signUp.name,
+        password: this.signUp.psswd,
       })
       .then(response => {
 
@@ -102,10 +109,9 @@ export default {
 
         this.$refs.psswdCheck.value = "";
 
-        if(response.status !== 200) {
-          alert("Error");
+        if(response.data === "dublicate") {  //Errorin sattuessa response.data palauttaa dublicate ja viesti näytetään
+          this.usernameError = true;
         } else {
-          console.log("Done")
           this.successSign = false;
           this.$emit("signUp");
         }
@@ -117,8 +123,9 @@ export default {
 
     },
 
-    clearPsswError() {
+    clearError() {
       this.psswError = false;
+      this.usernameError = false;
     },
 
     handleSignupClose() {
@@ -133,9 +140,5 @@ export default {
 
 <style scoped>
 
-.error-message {
-  color: #d33c40;
-  font-weight: 500;
-}
 
 </style>
