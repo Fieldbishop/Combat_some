@@ -185,6 +185,22 @@ app.post('/api/verify', cors(corsOptions), (req, res) => {
     }
 })
 
+app.post('/api/userstats', cors(corsOptions), async (req, res) => {
+    try {
+        const username = jwt.verify(req.body.token, "secret").username
+        const query = "SELECT userName, wins, participations FROM user WHERE userName = '" + username + "'";
+
+        const paluu = await mysql.mysqlQuery(query, null, "post");
+
+        return res.send(paluu)
+    } catch (error) {
+        res.json({
+            error: true,
+            data: error,
+        })
+    }
+})
+
 function jwtSignUser(user) {
     const fiveMin = 60 * 5;
     return jwt.sign(user, "secret", {

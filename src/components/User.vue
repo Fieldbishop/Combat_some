@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "User-item",
   data() {
@@ -25,10 +27,24 @@ export default {
     }
   },
   methods: {
-
+    async getUserData() {
+      try {
+        let token = document.cookie.split("token=")[1];
+        await axios.post("http://localhost:8081/api/userstats", {
+          token: token
+        })
+        .then(response => {
+         this.userData.username = response.data[0].userName;
+         this.userData.wins = response.data[0].wins;
+         this.userData.joins = response.data[0].participations;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
   },
   mounted() {
-
+    this.getUserData();
   }
 }
 </script>
