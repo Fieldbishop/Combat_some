@@ -5,27 +5,31 @@
       <button class="close" type="button" @click="$emit('closeModal')">&times;</button>
     </div>
     <table class="leaderboards-content"> <!-- Painamalla jokaista 'tr' pääsee kyseiseen taisteluun, jos ei ole logged in, pyytää kirjautumaan sisään -->
-      <tr style="cursor:pointer;">
-        <td><b>Daily cup</b></td>
-        <td>Nature</td>
-        <td>01:23:45</td>
+      <tr style="cursor:pointer;" v-for="(leaderboard, index) in leaderboards" :key="index">
+        <td><b>{{ leaderboard.id }}</b></td>
+        <td>{{ leaderboard.category }}</td>
+        <td ref="timeA">{{ times[index] }}</td>
         <td v-if="loggedIn"><button class="tableButton" @click="$emit('modal', 4)">JOIN</button></td> <!-- Napilla voidaan osallistua kisaan -->
-      </tr>
-      <tr style="cursor: pointer">
-        <td><b>Weekly cup</b></td>
-        <td>Space</td>
-        <td>01:23:45</td>
-        <td v-if="loggedIn"><button class="tableButton">JOIN</button></td>
       </tr>
     </table>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "leaderBoards",
   data() {
     return {
+      leaderboards: {
+
+      },
+      times: [
+
+      ],
+      alive: true,
+      interval: '',
 
     }
   },
@@ -33,9 +37,68 @@ export default {
     loggedIn: Boolean,
 
   },
-  methods: {
+  mounted() {
+    this.alive = true;
+    this.loadCups();
 
-  }
+    this.interval = setInterval(() => {
+      this.times = [];
+      for(let i = 0; i < this.leaderboards.length; i++) {
+        this.times.push(this.countdown(this.leaderboards[i].endDate))
+      }
+
+      console.log("Run")
+
+      if(!this.alive) {
+        clearInterval(this.interval);
+      }
+    }, 1000);
+  },
+  beforeDestroy() {
+    this.alive = false;
+  },
+
+  watch: {
+
+  },
+  methods: {
+    async loadCups() {
+      try {
+        await axios.get("http://localhost:8081/api/leaderboards")
+        .then(response => {
+          this.leaderboards = response.data;
+          for(let i = 0; i < this.leaderboards.length; i++) {
+            this.times.push(this.countdown(this.leaderboards[i].endDate))
+          }
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    countdown(date) {
+      let distance = new Date(date).getTime() - new Date().getTime();
+
+      if(distance <= 0) {
+        return "ENDED";
+      }
+
+      let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      days = (days <= 0) ? "" : days + " : ";
+
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      hours = (hours < 10) ? "0" + hours + " : " : hours + " : ";
+
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      minutes = (minutes < 0) ? "0" + minutes + " : " : minutes + " : ";
+
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+      return days + hours +  minutes +  seconds;
+    },
+
+  },
 }
 </script>
 
