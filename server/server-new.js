@@ -223,6 +223,22 @@ app.get('/api/leaderboards', cors(corsOptions), async (req, res) => {
     }
 })
 
+app.get('/api/images', cors(corsOptions), async (req, res) => {
+    try {
+        let query;
+
+        if(req.query.id !== undefined) {
+            query = "SELECT imageFilepath FROM battle_submission WHERE battleId = " + req.query.id
+        } else {
+            query = "SELECT imageFilepath FROM battle_submission";
+        }
+        const paluu = await mysql.mysqlQuery(query, null, 'get');
+        res.send(paluu);
+    } catch (error) {
+        console.log(error);
+        res.send({error: true, data: error});
+    }
+})
 
 
 function jwtSignUser(user) {
