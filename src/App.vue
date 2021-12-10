@@ -79,7 +79,6 @@ export default {
       if(id.length === 1) {
         this.modalId = id[0];
       } else {
-        console.log(id);
         this.battleId = id[1];
         this.modalId = id[0];
       }
