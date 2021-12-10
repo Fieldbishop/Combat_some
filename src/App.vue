@@ -9,16 +9,16 @@
         <sign-up @signUp="handleSignup" @closeModal="toggleModal"/>
       </template>
       <template v-slot:leaderboardsSlot>
-        <leader-boards :loggedIn="userState.loggedIn" @closeModal="toggleModal" @modal="changeModal"/>
+        <leader-boards :loggedIn="userState.loggedIn" @closeModal="toggleModal" @modal="changeModal" @changeBattle="showBattle"/>
       </template>
       <template v-slot:userSlot>
         <user @closeModal="toggleModal"/>
       </template>
       <template v-slot:submitSlot>
-        <image-uploader @closeModal="toggleModal"/>
+        <image-uploader :battleId="battleId" :username="userState.user" @closeModal="toggleModal"/>
       </template>
     </modal-container>
-    <main-content :loggedIn="userState.loggedIn" @vote="voteImage"/>
+    <main-content :loggedIn="userState.loggedIn" :battleId="battleId" @vote="voteImage"/>
     <battle-popup v-if="userState.loggedIn" @modal="toggleModal"/>
   </div>
 </template>
@@ -57,7 +57,8 @@ export default {
         token: null,
         user: null,
         loggedIn: false,
-      }
+      },
+      battleId: undefined,
 
     }
   },
@@ -75,18 +76,29 @@ export default {
 
     changeModal(id) {
       this.checkToken(document.cookie);
-      this.modalId = id;
+      if(id.length === 1) {
+        this.modalId = id[0];
+      } else {
+        console.log(id);
+        this.battleId = id[1];
+        this.modalId = id[0];
+      }
+    },
+
+    showBattle(id) {
+      this.modalVisible = false;
+      this.battleId = id;
     },
 
     handleLogin(data) {
-      this.justLogin();
+      this.justLogin(data.user.username);
       this.setToken(data.token);
-      this.userState.user = data.user.username;
       this.toggleModal(null);
     },
 
-    justLogin(){
+    justLogin(username){
       this.userState.loggedIn = true;
+      this.userState.user = username;
     },
 
     setToken(token) {
@@ -125,7 +137,7 @@ export default {
           "token": token
         }).then(response => {
           if(!response.data.error) {
-            this.justLogin()
+            this.justLogin(response.data.data.username)
           } else {
             this.handleSignOut()
           }
