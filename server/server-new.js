@@ -228,9 +228,9 @@ app.get('/api/images', cors(corsOptions), async (req, res) => {
         let query;
 
         if(req.query.id !== undefined) {
-            query = "SELECT imageFilepath FROM battle_submission WHERE battleId = " + req.query.id
+            query = "SELECT id, imageFilepath FROM battle_submission WHERE battleId = " + req.query.id
         } else {
-            query = "SELECT imageFilepath FROM battle_submission";
+            query = "SELECT id, imageFilepath FROM battle_submission";
         }
         const paluu = await mysql.mysqlQuery(query, null, 'get');
         res.send(paluu);
@@ -239,7 +239,6 @@ app.get('/api/images', cors(corsOptions), async (req, res) => {
         res.send({error: true, data: error});
     }
 })
-
 
 function jwtSignUser(user) {
     const fiveMin = 60 * 5;
