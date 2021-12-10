@@ -203,13 +203,39 @@ app.post('/api/userstats', cors(corsOptions), async (req, res) => {
 
 app.get('/api/leaderboards', cors(corsOptions), async (req, res) => {
     try {
-        const query = "SELECT * FROM battle";
+
+        let query;
+
+        if(req.query.id !== undefined) {
+            query = "SELECT * FROM battle WHERE id = " + req.query.id;
+        } else if(req.query.ids !== undefined) {
+            query = "SELECT id FROM battle";
+        } else {
+            query = "SELECT * FROM battle";
+        }
 
         const paluu = await mysql.mysqlQuery(query, null, 'get');
 
         res.send(paluu);
 
     } catch (error) {
+        res.send({error: true, data: error});
+    }
+})
+
+app.get('/api/images', cors(corsOptions), async (req, res) => {
+    try {
+        let query;
+
+        if(req.query.id !== undefined) {
+            query = "SELECT id, imageFilepath FROM battle_submission WHERE battleId = " + req.query.id
+        } else {
+            query = "SELECT id, imageFilepath FROM battle_submission";
+        }
+        const paluu = await mysql.mysqlQuery(query, null, 'get');
+        res.send(paluu);
+    } catch (error) {
+        console.log(error);
         res.send({error: true, data: error});
     }
 })
