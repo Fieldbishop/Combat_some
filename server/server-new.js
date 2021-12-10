@@ -206,8 +206,10 @@ app.get('/api/leaderboards', cors(corsOptions), async (req, res) => {
 
         let query;
 
-        if(Object.keys(req.query).length !== 0) {
+        if(req.query.id !== undefined) {
             query = "SELECT * FROM battle WHERE id = " + req.query.id;
+        } else if(req.query.ids !== undefined) {
+            query = "SELECT id FROM battle";
         } else {
             query = "SELECT * FROM battle";
         }
