@@ -59,11 +59,13 @@ export default {
         loggedIn: false,
       },
       battleId: undefined,
+      cupIds: [],
 
     }
   },
   mounted() {
     this.checkToken(document.cookie);
+    this.getLeaderboardIds();
   },
 
   methods: {
@@ -141,6 +143,21 @@ export default {
             this.handleSignOut()
           }
         });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async getLeaderboardIds() {
+      try {
+        await axios.get("http://localhost:8081/api/leaderboards?ids=1")
+            .then(response => {
+              this.cupIds = [];
+              for(let i = 0; i < response.data.length; i++) {
+                this.cupIds.push(response.data[i].id);
+              }
+              this.battleId = this.cupIds[Math.floor(Math.random() * this.cupIds.length)];
+            })
       } catch (error) {
         console.log(error);
       }
