@@ -43,12 +43,19 @@ export default {
         }
       })
       .then(response => {
-        if(response.status !== 200){
-          alert("There was an error receiving the image.")
-        }
         console.log(response);
+        alert("Submission completed successfully.");
       }).catch(error =>{
-        console.log(error);
+        if(error.response){
+          console.log(error.response.data);
+          if(error.response.data.hasOwnProperty('sqlMessage')){
+            alert(error.response.data.sqlMessage);
+          } else{
+            console.log("unknown error response.No sql error response.");
+          }
+        } else{
+          //TODO handle errors other than sql and log them or something else.
+        }
       })
     },
     triggerInput(){

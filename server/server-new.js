@@ -66,16 +66,26 @@ app.post('/api/image', cors(corsOptions), function (req, res) {
 
 app.post("/api/upload_file",cors(corsOptions),(req,res) =>{
     upload(req,res,function (err){
+        let statusCode;
         if(err){
-            return res.send("Error uploading file" + err).status(500);
+            return res.send(err).status(500);
         }
         console.log(req.file);
-        (async () =>{
-            let response = await mysql.mysqlQuery("INSERT INTO battle_submission VALUES(?, ?, ?, ?, ?)"
-                , [0, req.file.path, 0, "usernameHere",0])
-            console.log(response);
-            res.status( 200).end();
-        })()
+        if(req.file){
+            (async () =>{
+                // TODO Two last arguments need to be replaced with existing userName and battleId from req object.
+                let response = await mysql.mysqlQuery("INSERT INTO battle_submission VALUES(?, ?, ?, ?, ?)"
+                    , [0, req.file.path, 0, "testUser2",1])
+                if(!response.hasOwnProperty('errno')) {
+                    statusCode = 200
+                } else {
+                    statusCode = 500
+                }
+                res.status( statusCode).send(response).end();
+            })()
+        } else{
+            res.status(400).end();
+        }
     });
 });
 /** Uploads an image */
