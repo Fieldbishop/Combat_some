@@ -203,7 +203,14 @@ app.post('/api/userstats', cors(corsOptions), async (req, res) => {
 
 app.get('/api/leaderboards', cors(corsOptions), async (req, res) => {
     try {
-        const query = "SELECT * FROM battle";
+
+        let query;
+
+        if(Object.keys(req.query).length !== 0) {
+            query = "SELECT * FROM battle WHERE id = " + req.query.id;
+        } else {
+            query = "SELECT * FROM battle";
+        }
 
         const paluu = await mysql.mysqlQuery(query, null, 'get');
 
@@ -213,6 +220,8 @@ app.get('/api/leaderboards', cors(corsOptions), async (req, res) => {
         res.send({error: true, data: error});
     }
 })
+
+
 
 function jwtSignUser(user) {
     const fiveMin = 60 * 5;
