@@ -89,7 +89,7 @@ export default {
       hours = (hours < 10) ? "0" + hours + " : " : hours + " : ";
 
       let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      minutes = (minutes < 0) ? "0" + minutes + " : " : minutes + " : ";
+      minutes = (minutes < 10) ? "0" + minutes + " : " : minutes + " : ";
 
       let seconds = Math.floor((distance % (1000 * 60)) / 1000);
       seconds = (seconds < 10) ? "0" + seconds : seconds;
