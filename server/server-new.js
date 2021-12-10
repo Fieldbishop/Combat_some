@@ -6,6 +6,8 @@ const path = require("path");
 const cors = require('cors');
 const multer = require('multer');
 
+const jwt = require('jsonwebtoken');
+
 const mysql = require('./server_modules/mysql-connection');
 const storageProcess = require('./server_modules/multer-storage');
 const corsOptions = require('./server_modules/cors-local');
@@ -117,13 +119,25 @@ app.get('/api/leaderboard', function (req, res) {
 app.post('/api/createUser', cors(corsOptions), function (req, res) {
     (async () => {
         if (req.body) {
-            let query = "INSERT INTO user VALUES('" + req.body.username + "','" + req.body.password + "','0','0');";
+            const {username, password} = req.body;
+            let query = "INSERT INTO user VALUES('" + username + "','" + password + "','0','0');";
             let paluu = await mysql.mysqlQuery(query, null, "post");
+
+
+            //Huono tapa katsoa onko samoja käyttäjänimiä
             if(paluu == null){
-                res.end("Käyttäjän lisäys ei onnistunut");
+                res.end("dublicate");
                 res.status(403).end();
             }
-            res.status(200).end();
+
+            const userJson = {
+                'username': username,
+                'password': password
+            }
+
+            res.send({
+                user: userJson,
+            });
         } else {
             console.log("no");
             res.status(403).end();
@@ -131,11 +145,97 @@ app.post('/api/createUser', cors(corsOptions), function (req, res) {
     })();
 });
 
-app.get('/api/test', (req, res) => {
-    let query = "INSERT INTO user VALUES('?','?','0','0')";
-    console.log(query);
-    res.send(query)
+app.post('/api/login', cors(corsOptions), async (req, res) => {
+    try {
+        const {username, password} = req.body;
+        let query = "SELECT count(*) AS 'found' FROM user WHERE userName = '" + username + "' AND password = '" + password + "'";
+
+        const paluu = await mysql.mysqlQuery(query, null, "post");
+
+        if(paluu[0].found === 0){
+            return res.status(403).send({
+                error: "Login information incorrect"
+            });
+        }
+
+        const userJson = {
+            'username': username,
+            'password': password
+        }
+
+        res.send({
+            user: userJson,
+            token: jwtSignUser(userJson)
+        });
+    } catch (err) {
+        console.log(err);
+    }
 });
+
+app.get('/login/test', (req, res) => {
+    let user = req.body;
+
+    const token = jwtSignUser(user);
+
+    res.json({
+        token: token
+    })
+});
+
+app.post('/api/verify', cors(corsOptions), (req, res) => {
+    try {
+        const token = req.body.token;
+        const tokenDecoded = jwt.verify(token, "secret");
+        return res.json({
+            error: false,
+            data: tokenDecoded,
+            verify: true
+        });
+    } catch (error) {
+        res.json({
+            error: true,
+            data: error,
+            verify: false
+        })
+    }
+})
+
+app.post('/api/userstats', cors(corsOptions), async (req, res) => {
+    try {
+        const username = jwt.verify(req.body.token, "secret").username
+        const query = "SELECT userName, wins, participations FROM user WHERE userName = '" + username + "'";
+
+        const paluu = await mysql.mysqlQuery(query, null, "post");
+
+        return res.send(paluu)
+    } catch (error) {
+        res.json({
+            error: true,
+            data: error,
+        })
+    }
+})
+
+app.get('/api/leaderboards', cors(corsOptions), async (req, res) => {
+    try {
+        const query = "SELECT * FROM battle";
+
+        const paluu = await mysql.mysqlQuery(query, null, 'get');
+
+        res.send(paluu);
+
+    } catch (error) {
+        res.send({error: true, data: error});
+    }
+})
+
+function jwtSignUser(user) {
+    const fiveMin = 60 * 5;
+    return jwt.sign(user, "secret", {
+        expiresIn: fiveMin
+    })
+}
+
 
 /**
  * Tästä eteenpäin turhaa.

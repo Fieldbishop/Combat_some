@@ -19,6 +19,7 @@
       <div class="modal-header">
         <h1>Log In</h1>
         <button class="close" type="button" @click="$emit('closeModal')">&times;</button>
+        <h3 v-if="error" class="error-message">{{this.errorMsg}}</h3>
       </div>
       <div class="modal-container">
         <label><b>User name</b></label>
@@ -28,6 +29,7 @@
             name="log-name"
             v-model="login.name"
             required
+            @focus="clearError"
         />
 
         <label><b>Password</b></label>
@@ -37,6 +39,7 @@
             name="log-pssw"
             v-model="login.psswd"
             required
+            @focus="clearError"
         />
 
         <button type="submit" class="confirmButton">Log in</button>
@@ -57,24 +60,37 @@ export default {
         name: '',
         psswd: '',
       },
+      error: false,
+      errorMsg: '',
     }
   },
   methods: {
 
-    handleLogIn() {
+    clearError() {
+      this.error = false;
+      this.errorMsg = '';
+    },
 
-      axios.get("http://localhost:8081/api/login", {
-        'username': this.login.name,
-        'password': this.login.psswd,
-      })
-      .then(response => {
-        this.login = {
-          name: '',
-          psswd: '',
-        }
-      })
+    async handleLogIn() {
 
-      this.$emit('login', this.login);
+      try {
+        await axios.post("http://localhost:8081/api/login", {
+          username: this.login.name,
+          password: this.login.psswd,
+        })
+        .then(response => {
+          this.login = {
+            name: '',
+            psswd: '',
+          }
+          this.$emit('login', response.data);
+        })
+      } catch (error) {
+        console.log(error.response.data.error);
+        this.errorMsg = error.response.data.error;
+        this.error = true;
+      }
+
 
     },
 

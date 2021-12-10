@@ -28,7 +28,12 @@ export default {
   },
   props: {
     loggedIn: Boolean,
-
+    battleId: Number,
+  },
+  watch: {
+    battleId() {
+      console.log("change",this.battleId);
+    }
   },
   methods: {
     upVote() {

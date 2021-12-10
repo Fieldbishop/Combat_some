@@ -5,27 +5,32 @@
       <button class="close" type="button" @click="$emit('closeModal')">&times;</button>
     </div>
     <table class="leaderboards-content"> <!-- Painamalla jokaista 'tr' pääsee kyseiseen taisteluun, jos ei ole logged in, pyytää kirjautumaan sisään -->
-      <tr style="cursor:pointer;">
-        <td><b>Daily cup</b></td>
-        <td>Nature</td>
-        <td>01:23:45</td>
-        <td v-if="loggedIn"><button class="tableButton" @click="$emit('modal', 4)">JOIN</button></td> <!-- Napilla voidaan osallistua kisaan -->
-      </tr>
-      <tr style="cursor: pointer">
-        <td><b>Weekly cup</b></td>
-        <td>Space</td>
-        <td>01:23:45</td>
-        <td v-if="loggedIn"><button class="tableButton">JOIN</button></td>
+      <tr style="cursor:pointer;" v-for="(leaderboard, index) in leaderboards" :key="index">
+        <td @click="handleCup(leaderboard.id)"><b>{{ leaderboard.id }}</b></td>
+        <td @click="handleCup(leaderboard.id)">{{ leaderboard.category }}</td>
+        <td ref="timeA" @click="handleCup(leaderboard.id)">{{ times[index] }}</td>
+        <td v-if="loggedIn"><button class="tableButton" @click="handleImageView(leaderboard.id)">JOIN</button></td> <!-- Napilla voidaan osallistua kisaan -->
       </tr>
     </table>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "leaderBoards",
   data() {
     return {
+      leaderboards: {
+
+      },
+      times: [
+
+      ],
+      alive: true,
+      interval: '',
+      tt: '',
 
     }
   },
@@ -33,9 +38,77 @@ export default {
     loggedIn: Boolean,
 
   },
-  methods: {
+  mounted() {
+    this.alive = true;
+    this.loadCups();
 
-  }
+    this.interval = setInterval(() => {
+      this.times = [];
+      for(let i = 0; i < this.leaderboards.length; i++) {
+        this.times.push(this.countdown(this.leaderboards[i].endDate))
+      }
+
+      if(!this.alive) {
+        clearInterval(this.interval);
+      }
+    }, 1000);
+  },
+  beforeDestroy() {
+    this.alive = false;
+  },
+
+  watch: {
+
+  },
+  methods: {
+    async loadCups() {
+      try {
+        await axios.get("http://localhost:8081/api/leaderboards")
+        .then(response => {
+          this.leaderboards = response.data;
+          for(let i = 0; i < this.leaderboards.length; i++) {
+            this.times.push(this.countdown(this.leaderboards[i].endDate))
+          }
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    countdown(date) {
+      let distance = new Date(date).getTime() - new Date().getTime();
+
+      if(distance <= 0) {
+        return "ENDED";
+      }
+
+      let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      days = (days <= 0) ? "" : days + " : ";
+
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      hours = (hours < 10) ? "0" + hours + " : " : hours + " : ";
+
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      minutes = (minutes < 0) ? "0" + minutes + " : " : minutes + " : ";
+
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+      return days + hours +  minutes +  seconds;
+    },
+
+    handleCup(id) {
+      if(!this.loggedIn) {
+        this.$emit("modal", [1]);
+      } else {
+        this.$emit("changeBattle", id);
+      }
+    },
+
+    handleImageView(id) {
+      this.$emit("modal", [4, id])
+    }
+  },
 }
 </script>
 
@@ -87,6 +160,10 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
+tr:hover {
+  background-color: #0ae494;
+}
+
 td:last-child {
   padding: 10px 0 10px 10px;
 }
@@ -99,7 +176,7 @@ td:last-child {
 }
 
 .tableButton:hover {
-  background-color: #0ae494;
+  background-color: #d33c40;
   cursor: pointer;
 }
 

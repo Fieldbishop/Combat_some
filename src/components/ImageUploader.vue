@@ -21,6 +21,13 @@ import axios from 'axios';
 import FormData from 'form-data';
 export default {
   name: 'ImageUploader',
+  props: {
+    battleId: Number,   //Halutun battlen ID
+    username: String,   //Käyttäjän nimi
+  },
+  mounted() {
+    console.log("ID: " + this.battleId + "\nUsername: " + this.username); //Näkymään tullessa näyttää mikä battle ja käyttäjä
+  },
   methods: {
     catchFile(event) {
       let files;
