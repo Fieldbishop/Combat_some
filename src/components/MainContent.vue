@@ -9,21 +9,29 @@
         <img ref="image" src="../assets/test2.png" alt="winner photo" @load="imageLoaded">
       </div>
       <div v-if="imageUp" id="cup-string" class="cup-text cup-content">
-        <h3 ref="name">Cup name</h3>
-        <h4 ref="category">Cup category</h4>
-        <h4 ref="time">01:02:22</h4>
+        <h3 ref="name">{{ cupData.name }}</h3>
+        <h4 ref="category">{{ cupData.category }}</h4>
+        <h4 ref="time">{{ cupData.time }}</h4>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "MainContent",
   data() {
     return {
       imageUp: false,
-
+      cupInfo: undefined,
+      cupData: {
+        name: '',
+        category: '',
+        time: ''
+      },
+      interval: '',
     }
   },
   props: {
@@ -32,8 +40,18 @@ export default {
   },
   watch: {
     battleId() {
-      console.log("change",this.battleId);
+      this.loadBattleInfo(this.battleId);
+    },
+
+    cupInfo(){
+      this.updateElements();
     }
+  },
+  mounted() {
+    this.nextImage();
+    this.interval = setInterval(() => {
+      this.cupData.time = this.countdown(this.cupInfo.endDate);
+    }, 1000);
   },
   methods: {
     upVote() {
@@ -55,11 +73,48 @@ export default {
     imageLoaded() {
       this.$refs.image.style.display = "block";
       this.imageUp = true;
+    },
+
+    updateElements() {
+      this.cupData.name = this.cupInfo.id;
+      this.cupData.category = this.cupInfo.category;
+    },
+
+    async loadBattleInfo(id) {
+      try {
+        await axios.get("http://localhost:8081/api/leaderboards?id=" + id)
+        .then(response => {
+          this.cupInfo = response.data[0];
+          this.cupData.time = this.countdown(response.data[0].endDate);
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    countdown(date) {
+      let distance = new Date(date).getTime() - new Date().getTime();
+
+      if(distance <= 0) {
+        return "ENDED";
+      }
+
+      let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      days = (days <= 0) ? "" : days + " : ";
+
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      hours = (hours < 10) ? "0" + hours + " : " : hours + " : ";
+
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      minutes = (minutes < 10) ? "0" + minutes + " : " : minutes + " : ";
+
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+      return days + hours +  minutes +  seconds;
     }
   },
-  mounted() {
-    this.$refs.image.src = "https://via.placeholder.com/" + Math.floor(Math.random() * (1500 - 150 + 1) + 150);
-  }
+
 }
 
 </script>
