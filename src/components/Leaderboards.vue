@@ -6,10 +6,10 @@
     </div>
     <table class="leaderboards-content"> <!-- Painamalla jokaista 'tr' pääsee kyseiseen taisteluun, jos ei ole logged in, pyytää kirjautumaan sisään -->
       <tr style="cursor:pointer;" v-for="(leaderboard, index) in leaderboards" :key="index">
-        <td><b>{{ leaderboard.id }}</b></td>
-        <td>{{ leaderboard.category }}</td>
-        <td ref="timeA">{{ times[index] }}</td>
-        <td v-if="loggedIn"><button class="tableButton" @click="$emit('modal', 4)">JOIN</button></td> <!-- Napilla voidaan osallistua kisaan -->
+        <td @click="handleCup(leaderboard.id)"><b>{{ leaderboard.id }}</b></td>
+        <td @click="handleCup(leaderboard.id)">{{ leaderboard.category }}</td>
+        <td ref="timeA" @click="handleCup(leaderboard.id)">{{ times[index] }}</td>
+        <td v-if="loggedIn"><button class="tableButton" @click="handleImageView(leaderboard.id)">JOIN</button></td> <!-- Napilla voidaan osallistua kisaan -->
       </tr>
     </table>
   </div>
@@ -30,6 +30,7 @@ export default {
       ],
       alive: true,
       interval: '',
+      tt: '',
 
     }
   },
@@ -96,6 +97,17 @@ export default {
       return days + hours +  minutes +  seconds;
     },
 
+    handleCup(id) {
+      if(!this.loggedIn) {
+        this.$emit("modal", [1]);
+      } else {
+        this.$emit("changeBattle", id);
+      }
+    },
+
+    handleImageView(id) {
+      this.$emit("modal", [4, id])
+    }
   },
 }
 </script>
@@ -148,6 +160,10 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
+tr:hover {
+  background-color: #0ae494;
+}
+
 td:last-child {
   padding: 10px 0 10px 10px;
 }
@@ -160,7 +176,7 @@ td:last-child {
 }
 
 .tableButton:hover {
-  background-color: #0ae494;
+  background-color: #d33c40;
   cursor: pointer;
 }
 
