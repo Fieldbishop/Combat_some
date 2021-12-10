@@ -5,3 +5,8 @@ INSERT INTO user VALUES('testUser4', 'testPassword4', 1, 10);
 INSERT INTO user VALUES('testUser5', 'testPassword5', 3, 15);
 INSERT INTO battle VALUES(0, null, '2021-12-15 16:12:00.654211', 'test');
 INSERT INTO battle VALUES(0, 'testUser1', '2021-12-20 10:01:00.999999', 'test');
+
+-- Tyhjentää battle_submission taulun ja lisää vaatimuksen, että ei voi olla useita submitteja samaan battleen.
+truncate table battle_submission;
+ALTER TABLE battle_submission
+  ADD CONSTRAINT no_double_battle_submissions UNIQUE(userName, battleId);
