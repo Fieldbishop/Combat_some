@@ -6,7 +6,7 @@
           <div @click="downVote" id="test-left" class="test"><h1>⇓</h1></div>
           <div @click="upVote" id="test-right" class="test"><h1>⇑</h1></div>
         </div>
-        <img ref="image" src="../assets/test2.png" alt="winner photo" @load="imageLoaded">
+        <img ref="image" :src="currImg.image" alt="winner photo" @load="imageLoaded">
       </div>
       <div v-if="imageUp" id="cup-string" class="cup-text cup-content">
         <h3 ref="name">{{ cupData.name }}</h3>
@@ -32,6 +32,11 @@ export default {
         time: ''
       },
       interval: '',
+      currImg: {
+        id: 0,
+        imageFilepath: '',
+        image: undefined,
+      }
     }
   },
   props: {
@@ -41,6 +46,7 @@ export default {
   watch: {
     battleId() {
       this.loadBattleInfo(this.battleId);
+      this.nextImage();
     },
 
     cupInfo(){
@@ -48,7 +54,6 @@ export default {
     }
   },
   mounted() {
-    this.nextImage();
     this.interval = setInterval(() => {
       this.cupData.time = this.countdown(this.cupInfo.endDate);
     }, 1000);
@@ -64,10 +69,22 @@ export default {
       this.nextImage();
     },
 
-    nextImage() {
+    async nextImage() {
       this.$refs.image.style.display = "none";
       this.imageUp = false;
-      this.$refs.image.src = "https://via.placeholder.com/" + Math.floor(Math.random() * (1500 - 150 + 1) + 150);
+      this.currImg.image = "https://via.placeholder.com/" + Math.floor(Math.random() * (1500 - 150 + 1) + 150);
+
+      try {
+        await axios.get('http://localhost:8081/api/images?id=' + this.battleId)
+        .then(response => {
+          let random = Math.floor(Math.random() * response.data.length);
+          this.currImg.imageFilepath = response.data[random].imageFilepath;
+          this.currImg.id = response.data[random].id;
+        })
+      } catch (error) {
+        console.log(error)
+      }
+
     },
 
     imageLoaded() {
