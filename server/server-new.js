@@ -4,15 +4,17 @@ const app = express();
 const url = require('url');
 const path = require("path");
 const cors = require('cors');
+const fs = require('fs');
 const multer = require('multer');
 
 const jwt = require('jsonwebtoken');
 
 const mysql = require('./server_modules/mysql-connection');
+const mysqlHelpers = require('./server_modules/mysql-helpers')
 const storageProcess = require('./server_modules/multer-storage');
 const corsOptions = require('./server_modules/cors-local');
 
-const upload = multer({storage : storageProcess}).single('image');
+let uploader = multer({storage : storageProcess.storage });
 
 // for parsing application/json
 app.use(express.json());
@@ -29,51 +31,28 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(bodyParser.json());
-
-/*
-const http = require("http")
-console.log(http.STATUS_CODES);
-//console.log(http.METHODS)
-// app.get('/events', function (req, res){})
 */
 
-app.options('*', cors(corsOptions), ()=>{});
-app.post('/api/postTrigger', cors(corsOptions), function (req, res) {
-    console.log(req.headers);
-    console.log(req.url);
-    console.log(req.ip);
-    console.log(req.body);
-    console.log(req.hostname);
-    console.log(req.method);
-    console.log(req.protocol);
-    console.log(req.path);
-    console.log(req.query);
-    console.log(req.params);
-    console.log(req.subdomains);
-    res.status(204).end()
-})
-app.post('/api/image', cors(corsOptions), function (req, res) {
-    //console.log(req);
+// Battle submission image upload and sql query for it.
+app.post("/api/upload_file",cors(corsOptions),uploader.single('image'),(req,res) =>{
+    const bodyObj = JSON.parse(JSON.stringify(req.body));
+    let response;
+    //console.log(bodyObj);
+    //console.log(req.file);
     (async () => {
-        if (req.body) {
-            req.body
-            res.status(200).end()
-        } else {
-            res.status(403).end()
+        if (bodyObj.hasOwnProperty('battleId') &&
+            bodyObj.hasOwnProperty('username')) {
+            response = await mysql.mysqlQuery(
+                "INSERT INTO battle_submission VALUES(?, ?, ?, ?, ?)"
+                ,[0, req.file.path, 0, bodyObj.username, bodyObj.battleId])
         }
+        //console.log(response);
+        let statusCode = mysqlHelpers.httpStatusWithSqlResponse(response);
+        if (statusCode !== 200) {
+            fs.unlink(req.file.path, err => {console.log(err)});
+        }
+        res.status(statusCode).send(response).end();
     })()
-})
-
-// L juttuja
-
-app.post("/api/upload_file",cors(corsOptions),(req,res) =>{
-    upload(req,res,function (err){
-        if(err){
-            return res.send("Error uploading file" + err).status(500);
-        }
-        console.log(req.file);
-        res.status( 200).end();
-    });
 });
 /** Uploads an image */
 app.post("/api/upasdasd",function(req,res){
@@ -255,6 +234,39 @@ function jwtSignUser(user) {
  *
  */
 
+/*
+const http = require("http")
+console.log(http.STATUS_CODES);
+//console.log(http.METHODS)
+// app.get('/events', function (req, res){})
+*/
+
+app.options('*', cors(corsOptions), ()=>{});
+app.post('/api/postTrigger', cors(corsOptions), function (req, res) {
+    console.log(req.headers);
+    console.log(req.url);
+    console.log(req.ip);
+    console.log(req.body);
+    console.log(req.hostname);
+    console.log(req.method);
+    console.log(req.protocol);
+    console.log(req.path);
+    console.log(req.query);
+    console.log(req.params);
+    console.log(req.subdomains);
+    res.status(204).end()
+})
+app.post('/api/image', cors(corsOptions), function (req, res) {
+    //console.log(req);
+    (async () => {
+        if (req.body) {
+            req.body
+            res.status(200).end()
+        } else {
+            res.status(403).end()
+        }
+    })()
+})
 
 app.get('/events', function (req, res) {
     res.sendFile(path.join(__dirname + '/listofevents.html'));

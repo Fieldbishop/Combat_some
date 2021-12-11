@@ -3,9 +3,9 @@ const util = require("util");
 
 let con = mysql.createConnection({
     host: "127.0.0.1",
-    port: 3306,
+    port: 3305,
     user: "root",
-    password: "root",
+    password: "rootadming0g0600Yr$",
     database: "some_combat"
 });
 
@@ -24,19 +24,16 @@ async function mysqlQuery(sql, arg, httpVerb) {
     try {
         if (arg === undefined || arg === null) {
             return await query(sql);
+        } else{
+            return await query(sql, [...arg]);
         }
-        return await query(sql, [...arg]);
     } catch (err) {
         if (httpVerb) {
-            if (httpVerb.toLowerCase() === "post") {
-                console.log("Post wasn't successful..")
-                return null;
-            } else if (httpVerb.toLowerCase() === "get") {
-                console.log("Failed to get..")
-            }
+            console.log(httpVerb.toLowerCase() + " wasn't successful. Error : " + err)
         } else {
-            console.log("Database error!" + err);
+            console.log("Database Error : " + err);
         }
+        return err;
     }
 }
 

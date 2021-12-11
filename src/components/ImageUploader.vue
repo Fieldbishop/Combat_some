@@ -25,9 +25,6 @@ export default {
     battleId: Number,   //Halutun battlen ID
     username: String,   //Käyttäjän nimi
   },
-  mounted() {
-    console.log("ID: " + this.battleId + "\nUsername: " + this.username); //Näkymään tullessa näyttää mikä battle ja käyttäjä
-  },
   methods: {
     catchFile(event) {
       let files;
@@ -42,6 +39,8 @@ export default {
       }
       let formData = new FormData();
       formData.append("image", files[0]);
+      formData.append("battleId", this.battleId);
+      formData.append("username", this.username);
       console.log(files[0]);
       axios.post('http://127.0.0.1:8081/api/upload_file', formData
       ,{
@@ -50,12 +49,24 @@ export default {
         }
       })
       .then(response => {
-        if(response.status !== 200){
-          alert("There was an error receiving the image.")
-        }
         console.log(response);
+        if(response.status === 200){
+          alert("Submission completed successfully.");
+        } else if(response.status === 304){
+          alert("You've already submitted a battle");
+        }
+
       }).catch(error =>{
-        console.log(error);
+        if(error.response){
+          console.log(error.response.data);
+          if(error.response.data.hasOwnProperty('sqlMessage')){
+            alert(error.response.data.sqlMessage);
+          } else{
+            console.log("unknown error response.No sql error response.");
+          }
+        } else{
+          //TODO handle errors other than sql and log them or something else.
+        }
       })
     },
     triggerInput(){
