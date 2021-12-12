@@ -150,7 +150,7 @@ export default {
 
     async getLeaderboardIds() {
       try {
-        await axios.get("http://localhost:8081/api/leaderboards?ids=1")
+        await axios.get("http://localhost:8081/api/leaderboards")
             .then(response => {
               this.cupIds = [];
               for(let i = 0; i < response.data.length; i++) {

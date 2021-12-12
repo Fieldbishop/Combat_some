@@ -14,9 +14,16 @@ function getLeaderboardByWins (req, res) {
 }
 
 function getAllLeaderboards (req, res) {
-  const query = "SELECT * FROM battle";
+  let query;
+
+  if(Object.keys(req.query).length !== 0) {
+    query = "SELECT * FROM battle WHERE id = ?";
+  } else {
+    query = "SELECT * FROM battle";
+  }
+
   (async () => {
-    const mysqlResponse = await mysql.mysqlQuery(query, null, 'get');
+    const mysqlResponse = await mysql.mysqlQuery(query, req.query.id, 'get');
     const status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
     return res.status(status).send(mysqlResponse);
   })();
