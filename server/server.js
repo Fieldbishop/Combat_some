@@ -40,6 +40,9 @@ app.options('*', cors(corsOptions), ()=>{});
 app.post("/api/upload_file",cors(corsOptions),uploader.single('image'),(req,res) =>{
     imageUpload.uploadImage(req, res);
 });
+app.get("/api/images" ,cors(corsOptions),(req,res) => {
+    //Todo get images;
+});
 
 /**
  *  User Credentials and Verification
