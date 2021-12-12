@@ -109,7 +109,7 @@ export default {
 
         this.$refs.psswdCheck.value = "";
 
-        if(response.data === "dublicate") {  //Errorin sattuessa response.data palauttaa dublicate ja viesti näytetään
+        if(response.data === "duplicate") {  //Errorin sattuessa response.data palauttaa dublicate ja viesti näytetään
           this.usernameError = true;
         } else {
           this.successSign = false;

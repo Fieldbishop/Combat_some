@@ -6,7 +6,8 @@ let con = mysql.createConnection({
     port: 3305,
     user: "root",
     password: "rootadming0g0600Yr$",
-    database: "some_combat"
+    database: "some_combat",
+    queryFormat: ""
 });
 
 // node native promisify
@@ -25,7 +26,11 @@ async function mysqlQuery(sql, arg, httpVerb) {
         if (arg === undefined || arg === null) {
             return await query(sql);
         } else{
-            return await query(sql, [...arg]);
+            if(arg.isArray){
+                return await query(sql, [...arg]);
+            }else {
+                return await query(sql, arg);
+            }
         }
     } catch (err) {
         if (httpVerb) {
