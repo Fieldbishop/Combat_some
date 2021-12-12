@@ -10,3 +10,24 @@ INSERT INTO battle VALUES(0, 'testUser1', '2021-12-20 10:01:00.999999', 'test');
 truncate table battle_submission;
 ALTER TABLE battle_submission
   ADD CONSTRAINT no_double_battle_submissions UNIQUE(userName, battleId);
+
+-- Tekee uuden pöydän datakantaan.
+CREATE TABLE `some_combat`.`user_vote` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userName` VARCHAR(60) NOT NULL,
+  `battleSubmissionId` INT NOT NULL,
+  `vote` TINYINT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `no_double_vote` (`userName` ASC, `battleSubmissionId` ASC) INVISIBLE,
+  INDEX `vote_userName_idx` (`userName` ASC) INVISIBLE,
+  INDEX `vote_battleSubmissionId_idx` (`battleSubmissionId` ASC) VISIBLE,
+  CONSTRAINT `user_vote_userName`
+    FOREIGN KEY (`userName`)
+    REFERENCES `some_combat`.`user` (`userName`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `user_vote_battleSubmissionId`
+    FOREIGN KEY (`battleSubmissionId`)
+    REFERENCES `some_combat`.`battle_submission` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
