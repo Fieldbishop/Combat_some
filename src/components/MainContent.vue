@@ -2,9 +2,9 @@
   <div id="battle-content" class="content-container">
     <div class="cup-container">
       <div id="cup-image" class="image-container cup-content">
-        <div v-if="loggedIn" id="test-main" class="test">
-          <div @click="downVote" id="test-left" class="test"><h1>⇓</h1></div>
-          <div @click="upVote" id="test-right" class="test"><h1>⇑</h1></div>
+        <div v-if="loggedIn" id="test-main" class="image-vote">
+          <div @click="downVote" id="test-left" class="image-vote"><h1>⇓</h1></div>
+          <div @click="upVote" id="test-right" class="image-vote"><h1>⇑</h1></div>
         </div>
         <img ref="image" :src="currImg.image" alt="winner photo" @load="imageLoaded">
       </div>
@@ -80,6 +80,7 @@ export default {
           let random = Math.floor(Math.random() * response.data.length);
           this.currImg.imageFilepath = response.data[random].imageFilepath;
           this.currImg.id = response.data[random].id;
+          console.log(this.currImg);
         })
       } catch (error) {
         console.log(error)
@@ -184,7 +185,7 @@ export default {
   color: white;
 }
 
-.test {
+.image-vote {
   height: 100%;
   top:0;
   position: absolute;
