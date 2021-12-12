@@ -16,7 +16,8 @@ const corsOptions = require('./server_modules/cors-local');
 const leaderBoards = require('./server_functions/user_management/leaderboards');
 const userStats = require('./server_functions/user_management/user-statistics');
 const userManagement = require('./server_functions/user_management/user-management');
-const imageUpload = require('./server_functions/image_management/image_upload')
+const imageUpload = require('./server_functions/battle_submissions/image_upload')
+const ratingSystem = require('./server_functions/battle_submissions/rating_system.js');
 /**
  * Other Variables
  */
@@ -42,6 +43,9 @@ app.post("/api/upload_file",cors(corsOptions),uploader.single('image'),(req,res)
 });
 app.get("/api/images" ,cors(corsOptions),(req,res) => {
     //Todo get images;
+});
+app.post("/api/rate", cors(corsOptions), (req, res) => {
+    ratingSystem.updateRating(req, res);
 });
 
 /**

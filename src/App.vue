@@ -117,7 +117,8 @@ export default {
       this.userState.user = null;
     },
 
-    voteImage(vote) {
+    /*voteImage(vote, id) {
+      console.log(id)
       switch (vote) {
         case 0:
           console.log("Downvote");
@@ -128,6 +129,25 @@ export default {
         default:
           console.log("Unknown");
           break;
+      }
+    },*/
+
+    async voteImage(vote, id) {
+      if(this.userState.token != null){
+        try {
+          await axios.post("http://localhost:8081/api/rate", {
+            "id": id,
+            "token": this.userState.token,
+            "vote": vote
+          })
+          .then(response => {
+            console.log(response.data);
+          })
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        console.log("NOT LOGGED IN") //GENERIC TOKEN CHECK
       }
     },
 

@@ -33,7 +33,7 @@ export default {
       },
       interval: '',
       currImg: {
-        id: 0,
+        id: 1, //TESTAUS, VAIHDA POIS!
         imageFilepath: '',
         image: undefined,
       }
@@ -60,12 +60,12 @@ export default {
   },
   methods: {
     upVote() {
-      this.$emit('vote', 1);
+      this.$emit('vote', 1, this.currImg.id);
       this.nextImage();
     },
 
     downVote() {
-      this.$emit('vote', 0);
+      this.$emit('vote', -1, this.currImg.id);
       this.nextImage();
     },
 
