@@ -10,7 +10,8 @@ function httpStatusWithSqlResponse(sqlResponse){
       return 403;
     }
   }
-    return 500;
+  console.warn("Unclassified sql error :" + sqlResponse);
+  return 500;
 }
 
 module.exports.httpStatusWithSqlResponse = httpStatusWithSqlResponse;
