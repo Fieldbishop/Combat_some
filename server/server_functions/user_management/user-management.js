@@ -14,10 +14,11 @@ module.exports.createUser = function userSignup(req, res){
     let query = "INSERT INTO user VALUES(?,?,?,?);";
     (async () => {
       let sqlResponse = await mysql.mysqlQuery(query, [username, password, 0, 0], "post");
-
       //Huono tapa katsoa onko samoja käyttäjänimiä
-      if(sqlResponse == null){
-        res.status(403).send("duplicate");
+      if(sqlResponse.errno === 1062){
+        return res.status(403).json({
+          error: "dublicate",
+        });
       }
 
       const userJson = {
