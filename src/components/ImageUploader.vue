@@ -52,6 +52,10 @@ export default {
         console.log(response);
         if(response.status === 200){
           alert("Submission completed successfully.");
+          axios.patch('http://localhost:8081/api/usersubs', {
+            "token": document.cookie.split("token=")[1]
+          })
+          this.$emit("closeModal")
         } else if(response.status === 304){
           alert("You've already submitted a battle");
         }
