@@ -3,8 +3,8 @@
     <div class="cup-container">
       <div id="cup-image" class="image-container cup-content">
         <div v-if="loggedIn" id="test-main" class="test">
-          <div @click="downVote" id="test-left" class="test"><h1>⇓</h1></div>
-          <div @click="upVote" id="test-right" class="test"><h1>⇑</h1></div>
+          <div @click="downVote" id="test-left" class="test"><span class="material-icons">arrow_downward</span></div>
+          <div @click="upVote" id="test-right" class="test"><span class="material-icons">arrow_upward</span></div>
         </div>
         <img ref="image" :src="currImg.image" alt="winner photo" @load="imageLoaded">
       </div>
@@ -206,16 +206,16 @@ export default {
   cursor: pointer;
 }
 
-#test-main h1 {
+#test-main span {
   display: none;
   margin: 50px;
 }
 
-#test-left:hover h1 {
+#test-left:hover span {
   display: block;
 }
 
-#test-right:hover h1 {
+#test-right:hover span {
   display: block;
 }
 
