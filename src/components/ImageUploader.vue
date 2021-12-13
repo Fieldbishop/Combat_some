@@ -63,8 +63,10 @@ export default {
       }).catch(error =>{
         if(error.response){
           console.log(error.response.data);
-          if(error.response.data.hasOwnProperty('sqlMessage')){
-            alert(error.response.data.sqlMessage);
+          if(error.response.data.hasOwnProperty('code')){
+            if(error.response.data.code === "ER_DUP_ENTRY"){
+              alert("You have already submitted an image to this battle.");
+            }
           } else{
             console.log("unknown error response.No sql error response.");
           }

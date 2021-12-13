@@ -6,7 +6,7 @@
           <div @click="downVote" id="test-left" class="test"><span class="material-icons">arrow_downward</span></div>
           <div @click="upVote" id="test-right" class="test"><span class="material-icons">arrow_upward</span></div>
         </div>
-        <img ref="image" :src="currImg.image" alt="winner photo" @load="imageLoaded">
+        <img ref="image" :src="images[0]" alt="winner photo" @load="imageLoaded">
       </div>
       <div v-if="imageUp" id="cup-string" class="cup-text cup-content">
         <h3 ref="name">{{ cupData.name }}</h3>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   name: "MainContent",
@@ -32,11 +32,10 @@ export default {
         time: ''
       },
       interval: '',
-      currImg: {
-        id: 1, //TESTAUS, VAIHDA POIS!
-        imageFilepath: '',
-        image: undefined,
-      }
+      cupSubmissions: [],
+      images: [],
+      readImage: null,
+      currentSubmissionIndex: 0,
     }
   },
   props: {
@@ -46,72 +45,93 @@ export default {
   watch: {
     battleId() {
       this.loadBattleInfo(this.battleId);
-      this.nextImage();
+      console.log(this.battleId);
+      (async()=>{
+        await axios.get('http://localhost:8081/api/submissionData',
+            {params: { id: this.battleId, }} )
+        .then(response => {
+          console.log(response.data);
+          this.cupSubmissions = [...response.data];
+        }).catch(error =>{
+          console.log(error)
+        })
+      })()
     },
-
     cupInfo(){
       this.updateElements();
-    }
+    },
+    cupSubmissions(){
+      this.defineRandomImageId();
+      this.nextImage();
+    },
+    currentSubmissionIndex(){
+      this.nextImage();
+    },
+    images(){
+      //console.log(this.images[this.currentSubmissionIndex].data);
+      console.log(this.images[this.currentSubmissionIndex]);
+    },
   },
   mounted() {
     this.interval = setInterval(() => {
+      if(!this.cupInfo && this.battleId){
+        console.log("should load battleInfo again!");
+        this.loadBattleInfo(this.battleId);
+      }
       this.cupData.time = this.countdown(this.cupInfo.endDate);
     }, 1000);
   },
   methods: {
     upVote() {
-      this.$emit('vote', 1, this.currImg.id);
-      this.nextImage();
+      this.$emit('vote', 1, this.cupSubmissions[this.currentSubmissionIndex].id);
+      this.defineRandomImageId();
     },
 
     downVote() {
-      this.$emit('vote', -1, this.currImg.id);
-      this.nextImage();
+      this.$emit('vote', -1, this.cupSubmissions[this.currentSubmissionIndex].id);
+      this.defineRandomImageId();
     },
 
-    async nextImage() {
+    nextImage() {
       this.$refs.image.style.display = "none";
       this.imageUp = false;
-      this.currImg.image = "https://via.placeholder.com/" + Math.floor(Math.random() * (1500 - 150 + 1) + 150);
-
-      try {
-        await axios.get('http://localhost:8081/api/images?id=' + this.battleId)
-        .then(response => {
-          let random = Math.floor(Math.random() * response.data.length);
-          this.currImg.imageFilepath = response.data[random].imageFilepath;
-          this.currImg.id = response.data[random].id;
-        })
-      } catch (error) {
-        console.log(error)
-      }
-
+      console.log(this.currentSubmissionIndex);
+      this.loadImage(this.cupSubmissions[this.currentSubmissionIndex].imageFilepath);
     },
-
-    imageLoaded() {
-      this.$refs.image.style.display = "block";
-      this.imageUp = true;
-    },
-
     updateElements() {
       this.cupData.name = this.cupInfo.id;
       this.cupData.category = this.cupInfo.category;
     },
 
     async loadBattleInfo(id) {
-      try {
-        await axios.get("http://localhost:8081/api/leaderboards?id=" + id)
-        .then(response => {
-          this.cupInfo = response.data[0];
-          this.cupData.time = this.countdown(response.data[0].endDate);
-        })
-      } catch (error) {
+      await axios.get("http://localhost:8081/api/leaderboards",
+          {params: { id: id, }})
+      .then(response => {
+        //console.log(response);
+        this.cupInfo = response.data[0];
+        this.cupData.time = this.countdown(response.data[0].endDate);
+      }).catch(error =>{
         console.log(error);
-      }
+      })
+    },
+    async loadImage(path){
+      console.log("Loading image with path : " + path);
+      await (async () => {
+        await axios.get('http://localhost:8081/api/images',{params: { path: path } }).then(response => {
+          this.images = [...this.images, response];
+          this.$refs.image.style.display = "block";
+          this.imageUp = true;
+        }).catch(error => {
+          console.log(error)
+        })
+      })()
+    },
+    defineRandomImageId(){
+      this.currentSubmissionIndex = Math.floor(Math.random() * this.cupSubmissions.length);
     },
 
     countdown(date) {
       let distance = new Date(date).getTime() - new Date().getTime();
-
       if(distance <= 0) {
         return "ENDED";
       }

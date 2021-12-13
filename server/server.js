@@ -17,14 +17,15 @@ const leaderBoards = require('./server_functions/user_management/leaderboards');
 const userStats = require('./server_functions/user_management/user-statistics');
 const userManagement = require('./server_functions/user_management/user-management');
 const imageUpload = require('./server_functions/battle_submissions/image_upload')
-const ratingSystem = require('./server_functions/battle_submissions/rating_system.js');
+const ratingSystem = require('./server_functions/battle_submissions/rating-system.js');
+const battleDataHandler = require('./server_functions/battle_submissions/battle-data-handler.js');
 /**
  * Other Variables
  */
 
 let uploader = multer({storage : storageProcess.storage });
 /**
- * Middleware for all paths.
+ * Middleware and server app wide actions.
  */
 
 // for parsing application/json
@@ -42,8 +43,11 @@ app.post("/api/upload_file",cors(corsOptions),uploader.single('image'),(req,res)
     imageUpload.uploadImage(req, res);
 });
 app.get("/api/images" ,cors(corsOptions),(req,res) => {
-    //Todo get images;
+    battleDataHandler.getImage(req, res);
 });
+app.get("/api/submissionData",cors(corsOptions),(req,res)=>{
+    battleDataHandler.getSubmissionData(req, res);
+})
 app.post("/api/rate", cors(corsOptions), (req, res) => {
     ratingSystem.updateRating(req, res);
 });
@@ -87,7 +91,7 @@ app.get('/api/leaderboard', function (req, res) {
 
 app.get('/api/leaderboards', cors(corsOptions), (req, res)=>{
     leaderBoards.getEndedLeaderboards();
-    leaderBoards.getAllLeaderboards(req, res);
+    leaderBoards.getLeaderboards(req, res);
 })
 
 /**

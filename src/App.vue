@@ -63,11 +63,13 @@ export default {
 
     }
   },
+  beforeMount() {
+    this.getLeaderboardIds();
+  },
   mounted() {
     let token = document.cookie.split("token=")[1];
     this.setToken(token);
     this.checkToken(document.cookie);
-    this.getLeaderboardIds();
   },
 
   methods: {

@@ -1,6 +1,6 @@
 const mysql = require('../../server_modules/mysql-connection');
 const jwt = require('jsonwebtoken');
-const easyTime = require('../../server_modules/easy-time');
+const easyTime = require('../../server_modules/utils/easy-time');
 
 function jwtSignUser(user) {
   return jwt.sign(user, "secret", {
