@@ -32,16 +32,23 @@
             placeholder="Username"
             name="sign-name"
             v-model="signUp.name"
+            pattern="{,59}"
             @focus="clearError"
             required
         />
 
+        <p v-if="psswLength" class="error-message">
+          Password must be at least 5 characters
+        </p>
+
         <label><b>Password</b></label>
         <input
+            ref="psswd"
             type="password"
             placeholder="Password"
             name="sign-pssw"
             v-model="signUp.psswd"
+            pattern="{,499}"
             @focus="clearError"
             required
         />
@@ -80,6 +87,7 @@ export default {
     return {
       usernameError: false,
       psswError: false,
+      psswLength: false,
       successSign: true,
       signUp: {
         name: '',
@@ -91,6 +99,11 @@ export default {
 
     // handleSignUp() tarkistaa että salasanat samat, lähettää $emit avulla olion App.vue:lle ja siistii elementit
     async handleSignUp() {
+      if(this.signUp.psswd.length < 5) {
+        this.psswLength = true;
+        return;
+      }
+
       if(this.signUp.psswd !== this.$refs.psswdCheck.value) {
         this.psswError = true;
         return;
@@ -125,6 +138,7 @@ export default {
     clearError() {
       this.psswError = false;
       this.usernameError = false;
+      this.psswLength = false;
     },
 
     handleSignupClose() {
