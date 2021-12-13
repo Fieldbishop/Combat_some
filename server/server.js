@@ -76,10 +76,6 @@ app.post('/api/userstats', cors(corsOptions), (req, res) => {
     userStats.userWins(req, res);
 })
 
-app.patch('/api/userwins', cors(corsOptions), (req, res) => {
-    userStats.updateUserWins(req, res);
-});
-
 app.patch('/api/usersubs', cors(corsOptions), (req, res) => {
     userStats.updateUserSubmissions(req, res);
 });
