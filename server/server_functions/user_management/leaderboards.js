@@ -29,5 +29,33 @@ function getAllLeaderboards (req, res) {
   })();
 }
 
+function getEndedLeaderboards() {
+  const now = new Date().getTime();
+
+  let query = "SELECT id, endDate AS end FROM battle WHERE endDate = (SELECT MIN(endDate) FROM battle);";
+
+  (async () => {
+    let mysqlResponse = await mysql.mysqlQuery(query, null, 'End date');
+    const then = new Date(mysqlResponse[0].end).getTime();
+    const id = mysqlResponse[0].id;
+    if(now >= then){
+      query = "SELECT userName FROM battle_submission WHERE rating = (SELECT MAX(rating) from battle_submission WHERE battleId = ?)"
+      mysqlResponse = await mysql.mysqlQuery(query, id, 'Winner');
+
+      if(mysqlResponse.length > 0) {
+        query = "UPDATE user set wins = wins+1 WHERE userName = ?";
+        for(let i = 0; i < mysqlResponse.length; i++) {
+          await mysql.mysqlQuery(query, mysqlResponse[i].userName, "Wins");
+        }
+      }
+
+      query = "DELETE FROM battle WHERE id = ?"
+      await mysql.mysqlQuery("DELETE FROM battle_submission WHERE battleId = ?", id, "Sub delete")
+      await mysql.mysqlQuery(query, id, "Delete");
+    }
+  })();
+}
+
 module.exports.getAllLeaderboards = getAllLeaderboards;
 module.exports.getLeaderboardsByWins = getLeaderboardByWins;
+module.exports.getEndedLeaderboards = getEndedLeaderboards;
