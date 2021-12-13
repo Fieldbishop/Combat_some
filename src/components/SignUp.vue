@@ -102,24 +102,23 @@ export default {
       })
       .then(response => {
 
-        this.signUp = {
-          name: '',
-          psswd: '',
-        }
-
-        this.$refs.psswdCheck.value = "";
-
-        if(response.data === "duplicate") {  //Errorin sattuessa response.data palauttaa dublicate ja viesti näytetään
-          this.usernameError = true;
-        } else {
-          this.successSign = false;
-          this.$emit("signUp");
-        }
+        this.successSign = false;
+        this.$emit("signUp");
 
       })
       .catch(error => {
-        console.log(error)
+        if(error.response.status === 403) {
+          this.usernameError = true;
+        } else {
+          console.log(error);
+        }
       });
+
+      this.signUp = {
+        name: '',
+        psswd: '',
+      }
+      this.$refs.psswdCheck.value = "";
 
     },
 
