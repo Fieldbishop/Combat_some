@@ -6,7 +6,7 @@
           <div @click="downVote" id="test-left" class="test"><span class="material-icons">arrow_downward</span></div>
           <div @click="upVote" id="test-right" class="test"><span class="material-icons">arrow_upward</span></div>
         </div>
-        <img ref="image" :src="images[0]" alt="winner photo" @load="imageLoaded">
+        <img ref="image" :src="(images[currentIndex] !== undefined) ? images[currentIndex]: null" alt="winner photo">
       </div>
       <div v-if="imageUp" id="cup-string" class="cup-text cup-content">
         <h3 ref="name">{{ cupData.name }}</h3>
@@ -35,7 +35,7 @@ export default {
       cupSubmissions: [],
       images: [],
       readImage: null,
-      currentSubmissionIndex: 0,
+      currentIndex: 0,
     }
   },
   props: {
@@ -61,15 +61,14 @@ export default {
       this.updateElements();
     },
     cupSubmissions(){
-      this.defineRandomImageId();
+      this.shuffle();
       this.nextImage();
     },
-    currentSubmissionIndex(){
+    currentIndex(){
       this.nextImage();
     },
     images(){
-      //console.log(this.images[this.currentSubmissionIndex].data);
-      console.log(this.images[this.currentSubmissionIndex]);
+      console.log(this.images[this.currentIndex]);
     },
   },
   mounted() {
@@ -83,20 +82,26 @@ export default {
   },
   methods: {
     upVote() {
-      this.$emit('vote', 1, this.cupSubmissions[this.currentSubmissionIndex].id);
-      this.defineRandomImageId();
+      this.$emit('vote', 1, this.cupSubmissions[this.currentIndex].id);
+      this.indexChange();
     },
-
     downVote() {
-      this.$emit('vote', -1, this.cupSubmissions[this.currentSubmissionIndex].id);
-      this.defineRandomImageId();
+      this.$emit('vote', -1, this.cupSubmissions[this.currentIndex].id);
+      this.indexChange();
     },
-
+    indexChange(){
+      this.currentIndex++;
+      if(!(this.currentIndex === this.cupSubmissions.length)){
+        this.currentIndex = 0;
+      }
+    },
     nextImage() {
-      this.$refs.image.style.display = "none";
-      this.imageUp = false;
-      console.log(this.currentSubmissionIndex);
-      this.loadImage(this.cupSubmissions[this.currentSubmissionIndex].imageFilepath);
+      if(this.images.length !== this.cupSubmissions.length){
+        this.$refs.image.style.display = "none";
+        this.imageUp = false;
+        console.log(this.currentIndex);
+        this.loadImage(this.cupSubmissions[this.currentIndex].imageFilepath);
+      }
     },
     updateElements() {
       this.cupData.name = this.cupInfo.id;
@@ -117,8 +122,12 @@ export default {
     async loadImage(path){
       console.log("Loading image with path : " + path);
       await (async () => {
-        await axios.get('http://localhost:8081/api/images',{params: { path: path } }).then(response => {
-          this.images = [...this.images, response];
+        await axios.get('http://localhost:8081/api/images',{params: { path: path },
+          responseType: 'blob'}).then(response => {
+          console.log(typeof response.data);
+          let url = URL.createObjectURL(response.data)
+          console.log(url);
+          this.images = [...this.images, url];
           this.$refs.image.style.display = "block";
           this.imageUp = true;
         }).catch(error => {
@@ -126,8 +135,24 @@ export default {
         })
       })()
     },
-    defineRandomImageId(){
-      this.currentSubmissionIndex = Math.floor(Math.random() * this.cupSubmissions.length);
+    defineRandomImageOrder(){
+      this.shuffle();
+    },
+    //stack overflow shuffle code. https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+    shuffle() {
+      let currentIndex = this.cupSubmissions.length,  randomIndex;
+
+      // While there remain elements to shuffle...
+        while (currentIndex !== 0) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [this.cupSubmissions[currentIndex], this.cupSubmissions[randomIndex]] = [
+        this.cupSubmissions[randomIndex], this.cupSubmissions[currentIndex]];
+      }
     },
 
     countdown(date) {
