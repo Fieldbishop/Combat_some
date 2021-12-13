@@ -64,6 +64,8 @@ export default {
     }
   },
   mounted() {
+    let token = document.cookie.split("token=")[1];
+    this.setToken(token);
     this.checkToken(document.cookie);
     this.getLeaderboardIds();
   },
