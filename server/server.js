@@ -76,12 +76,21 @@ app.post('/api/userstats', cors(corsOptions), (req, res) => {
     userStats.userWins(req, res);
 })
 
+app.patch('/api/userwins', cors(corsOptions), (req, res) => {
+    userStats.updateUserWins(req, res);
+});
+
+app.patch('/api/usersubs', cors(corsOptions), (req, res) => {
+    userStats.updateUserSubmissions(req, res);
+});
+
 /* Returns a leaderboard dataset from the database asynchronously */
 app.get('/api/leaderboard', function (req, res) {
     leaderBoards.getLeaderboardsByWins(req, res);
 });
 
 app.get('/api/leaderboards', cors(corsOptions), (req, res)=>{
+    leaderBoards.getEndedLeaderboards();
     leaderBoards.getAllLeaderboards(req, res);
 })
 
