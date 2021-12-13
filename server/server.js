@@ -47,7 +47,8 @@ app.get("/api/images" ,cors(corsOptions),(req,res) => {
 });
 app.get("/api/submissionData",cors(corsOptions),(req,res)=>{
     battleDataHandler.getSubmissionData(req, res);
-})
+});
+
 app.post("/api/rate", cors(corsOptions), (req, res) => {
     ratingSystem.updateRating(req, res);
 });
@@ -82,6 +83,10 @@ app.post('/api/userstats', cors(corsOptions), (req, res) => {
 
 app.patch('/api/usersubs', cors(corsOptions), (req, res) => {
     userStats.updateUserSubmissions(req, res);
+});
+
+app.put('/api/newVote', cors(corsOptions), (req, res) => {
+    ratingSystem.vote(req,res);
 });
 
 /* Returns a leaderboard dataset from the database asynchronously */

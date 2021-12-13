@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <nav-bar :loggedIn="userState.loggedIn" @signOut="handleSignOut" @modal="toggleModal"/> <!-- ':' emits, '@' listens -->
+    <nav-bar :loggedIn="userState.loggedIn" @signOut="handleSignOut" @modal="toggleModal"/>
+    <!-- ':' emits, '@' listens -->
     <modal-container v-if="modalVisible" :modalId="modalId">
       <template v-slot:loginSlot>
         <log-in @login="handleLogin" @closeModal="toggleModal" ref="login"/>
@@ -9,7 +10,8 @@
         <sign-up @signUp="handleSignup" @closeModal="toggleModal"/>
       </template>
       <template v-slot:leaderboardsSlot>
-        <leader-boards :loggedIn="userState.loggedIn" @closeModal="toggleModal" @modal="changeModal" @changeBattle="showBattle"/>
+        <leader-boards :loggedIn="userState.loggedIn" @closeModal="toggleModal" @modal="changeModal"
+                       @changeBattle="showBattle"/>
       </template>
       <template v-slot:userSlot>
         <user @closeModal="toggleModal"/>
@@ -82,7 +84,7 @@ export default {
 
     changeModal(id) {
       this.checkToken(document.cookie);
-      if(id.length === 1) {
+      if (id.length === 1) {
         this.modalId = id[0];
       } else {
         this.battleId = id[1];
@@ -101,7 +103,7 @@ export default {
       this.toggleModal(null);
     },
 
-    justLogin(username){
+    justLogin(username) {
       this.userState.loggedIn = true;
       this.userState.user = username;
     },
@@ -137,19 +139,31 @@ export default {
     },*/
 
     async voteImage(vote, id) {
-      if(this.userState.token != null){
+      if (this.userState.token != null) {
+        await axios.put("http://localhost:8081/api/newVote", {
+          "vote" : vote,
+          "id" : id,
+          "token" : this.userState.token
+        }).then(response => {
+              console.log(response.data)
+            }).catch(error => {
+              console.log(error);
+            });
+        /*                                                        ONKS TÄÄ SAMPO JOKU TÄRKEE? T: LASSI
         try {
           await axios.post("http://localhost:8081/api/rate", {
             "id": id,
             "token": this.userState.token,
             "vote": vote
           })
-          .then(response => {
-            console.log(response.data);
-          })
+              .then(response => {
+                console.log(response.data);
+              })
         } catch (error) {
           console.log(error);
         }
+        */
+
       } else {
         console.log("NOT LOGGED IN") //GENERIC TOKEN CHECK
       }
@@ -161,7 +175,7 @@ export default {
         await axios.post("http://localhost:8081/api/verify", {
           "token": token
         }).then(response => {
-          if(!response.data.error) {
+          if (!response.data.error) {
             this.justLogin(response.data.data.username)
           } else {
             this.handleSignOut()
@@ -177,7 +191,7 @@ export default {
         await axios.get("http://localhost:8081/api/leaderboards")
             .then(response => {
               this.cupIds = [];
-              for(let i = 0; i < response.data.length; i++) {
+              for (let i = 0; i < response.data.length; i++) {
                 this.cupIds.push(response.data[i].id);
               }
               this.battleId = this.cupIds[Math.floor(Math.random() * this.cupIds.length)];
@@ -216,8 +230,8 @@ body {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.5);
   padding-top: 60px;
 }
 
@@ -300,7 +314,7 @@ body {
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 50px;  /* Preferred icon size */
+  font-size: 50px; /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;

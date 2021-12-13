@@ -6,7 +6,7 @@ module.exports.updateRating = (req, res) => {
     const battleSubmissionId = req.body.id;
     const vote = req.body.vote;
     (async () => {
-        let responseObj = await updateRating(vote, battleSubmissionId, req.method)
+        let responseObj = await updateRating(vote, battleSubmissionId, req.method);
         res.status(responseObj.status).send(responseObj.response);
     })();
 
@@ -20,25 +20,25 @@ module.exports.vote = (req, res) => {
         const mysqlResponse = await mysql.mysqlQuery(query, [vote, battleSubmissionId], req.method);
         let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
         let args;
-        if(status === 200){
+        if (status === 200) {
             query = "UPDATE user_vote set vote = ? WHERE (userName = ?, battleSubmissionId = ?)";
-            args = [vote,username,battleSubmissionId];
-        } else{
+            args = [vote, username, battleSubmissionId];
+        } else {
             query = "INSERT INTO user_vote VALUES(?,?,?,?)";
             args = [null, username, battleSubmissionId, vote];
         }
         const secondResponse = await mysql.mysqlQuery(query, args, req.method);
         status = mysqlHelpers.httpStatusWithSqlResponse(secondResponse);
-        if(status === 200){
-            let responseObj = await updateRating(vote, battleSubmissionId, req.method)
+        if (status === 200) {
+            let responseObj = await updateRating(vote, battleSubmissionId, req.method);
             res.status(responseObj.status).send(responseObj.response);
-        } else{
+        } else {
             res.status(status).send(secondResponse);
         }
     })();
 }
 
-async function updateRating(vote, battleSubmissionId, httpVerb = undefined){
+async function updateRating(vote, battleSubmissionId, httpVerb = undefined) {
     const query = "UPDATE battle_submission set rating = rating+? WHERE id = ?";
     const mysqlResponse = await mysql.mysqlQuery(query, [vote, battleSubmissionId], httpVerb);
     const status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
@@ -48,30 +48,27 @@ async function updateRating(vote, battleSubmissionId, httpVerb = undefined){
     };
 }
 
-module.exports.getRating = (req, res) =>{
+module.exports.getRating = (req, res) => {
     let sqlArguments;
     let query;
     const username = jwt.verify(req.body.token, "secret").username;
 
-    if(req.body.hasOwnProperty('battleId')){
+    if (req.body.hasOwnProperty('battleId')) {
         query = "SELECT rating FROM battle_submission WHERE (userName = ?, battleId = ?)";
         sqlArguments = [username, req.body.battleId]
     } else if (req.body.hasOwnProperty('battleSubmissionId')) {
         query = "SELECT rating FROM battle_submission WHERE (id = ?, userName = ?)";
-        sqlArguments = [req.body.battleSubmissionId , username]
+        sqlArguments = [req.body.battleSubmissionId, username]
 
-    } else{
+    } else {
         return res.status(400).send({
             error: "Bad request, incorrect id property property is missing, " +
                 "body should have "
         });
     }
-    (async () =>{
+    (async () => {
         const mysqlResponse = await mysql.mysqlQuery(query, sqlArguments, req.method);
         const status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
         res.status(status).send(mysqlResponse);
-    })()
-
-
-
+    })();
 }
