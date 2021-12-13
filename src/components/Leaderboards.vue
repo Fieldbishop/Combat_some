@@ -116,11 +116,12 @@ export default {
 
 .leaderboards-body {
   background-color: #eeeeee;
-  margin: 5% auto 25vh auto;
+  margin: 50px auto 10% auto;
   min-width: 400px;
   max-width: 60%;
   min-height: 500px;
-  height: auto;
+  max-height: 75%;
+  overflow: auto;
   border: 1px solid #111111;
 }
 
