@@ -15,7 +15,7 @@ module.exports.vote = (req, res) => {
     const username = jwt.verify(req.body.token, "secret").username;
     const battleSubmissionId = req.body.id;
     const vote = req.body.vote;
-    let query = "SELECT id user_vote WHERE (userName = ?, battleSubmissionId = ?)";
+    let query = "SELECT id FROM user_vote WHERE (userName = ?, battleSubmissionId = ?)";
     (async () => {
         const mysqlResponse = await mysql.mysqlQuery(query, [vote, battleSubmissionId], req.method);
         let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
