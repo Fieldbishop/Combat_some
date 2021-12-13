@@ -17,7 +17,7 @@ module.exports.createUser = function userSignup(req, res){
       //Huono tapa katsoa onko samoja käyttäjänimiä
       if(sqlResponse.errno === 1062){
         return res.status(403).json({
-          error: "dublicate",
+          error: "duplicate",
         });
       }
 
