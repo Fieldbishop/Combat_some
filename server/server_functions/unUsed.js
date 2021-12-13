@@ -8,7 +8,6 @@
 
 // for parsing multipart/form-data
 //app.use(express.static('public'));
-
 const cors = require('cors');
 const corsOptions = require('../server_modules/cors-local');
 const path = require('path');
@@ -29,7 +28,7 @@ console.log(http.STATUS_CODES);
 //console.log(http.METHODS)
 // app.get('/events', function (req, res){})
 */
-
+/*
 app.post('/api/postTrigger', cors(corsOptions), function (req, res) {
   console.log(req.headers);
   console.log(req.url);
@@ -44,6 +43,7 @@ app.post('/api/postTrigger', cors(corsOptions), function (req, res) {
   console.log(req.subdomains);
   res.status(204).end()
 })
+ */
 app.post('/api/image', cors(corsOptions), function (req, res) {
   //console.log(req);
   (async () => {

@@ -1,7 +1,7 @@
 const mysql = require('../../server_modules/mysql-connection');
 const mysqlHelpers = require('../../server_modules/mysql-helpers');
 
-function getLeaderboardByWins (req, res) {
+module.exports.getLeaderboardsByWins =  (req, res) => {
   if (req.body) {
     let query = "SELECT userName FROM user ORDER BY wins DESC LIMITS 0, 100";
     (async () => {
@@ -13,7 +13,7 @@ function getLeaderboardByWins (req, res) {
   }
 }
 
-function getAllLeaderboards (req, res) {
+module.exports.getLeaderboards = (req, res) => {
   let query;
 
   if(Object.keys(req.query).length !== 0) {
@@ -28,6 +28,3 @@ function getAllLeaderboards (req, res) {
     return res.status(status).send(mysqlResponse);
   })();
 }
-
-module.exports.getAllLeaderboards = getAllLeaderboards;
-module.exports.getLeaderboardsByWins = getLeaderboardByWins;

@@ -63,9 +63,11 @@ export default {
 
     }
   },
+  beforeMount() {
+    this.getLeaderboardIds();
+  },
   mounted() {
     this.checkToken(document.cookie);
-    this.getLeaderboardIds();
   },
 
   methods: {
