@@ -1,6 +1,6 @@
 const mysql = require('../../server_modules/mysql-connection');
 const mysqlHelpers = require('../../server_modules/mysql-helpers');
-const {endBattle, startNewBattle} = require("../battle_submissions/battleCoordinator");
+const {endBattle, startNewBattle, deleteSubmissionImages} = require("../battle_submissions/battleCoordinator");
 
 module.exports.getLeaderboardsByWins = (req, res) => {
     if (req.body) {
@@ -58,7 +58,7 @@ function getEndedLeaderboards() {
                 let mysqlResponse2 = await mysql.mysqlQuery(query, id, 'Winner');
                 if (mysqlResponse2.length > 0) {
                     query = "UPDATE user set wins = wins+1 WHERE userName = ?";
-                    for (let i = 0; i < mysqlResponse.length; i++) {
+                    for (let i = 0; i < mysqlResponse2.length; i++) {
                         await mysql.mysqlQuery(query, mysqlResponse2[i].userName, "Wins");
                     }
                 }
@@ -66,6 +66,7 @@ function getEndedLeaderboards() {
                     for (let i = 0; i < mysqlResponse1.length; i++) {
                         id = mysqlResponse1[i].id;
                         type = mysqlResponse1[i].cupType;
+                        deleteSubmissionImages(id);
                         endBattle(id);
                         startNewBattle(type);
                     }
