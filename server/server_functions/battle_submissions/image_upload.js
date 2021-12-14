@@ -5,8 +5,8 @@ const fs = require('fs');
 module.exports.uploadImage = (req, res) =>{
   const bodyObj = JSON.parse(JSON.stringify(req.body));
   let response;
-  //console.log(bodyObj);
-  //console.log(req.file);
+  console.log(bodyObj.username);
+  console.log(bodyObj.battleId);
   (async () => {
     if (bodyObj.hasOwnProperty('battleId') &&
         bodyObj.hasOwnProperty('username')) {
@@ -14,7 +14,6 @@ module.exports.uploadImage = (req, res) =>{
           "INSERT INTO battle_submission VALUES(?, ?, ?, ?, ?)"
           ,[0, req.file.path, 0, bodyObj.username, bodyObj.battleId])
     }
-    //console.log(response);
     let statusCode = mysqlHelpers.httpStatusWithSqlResponse(response);
     if (statusCode !== 200) {
       fs.unlink(req.file.path, err => {console.log(err)});

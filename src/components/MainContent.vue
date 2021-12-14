@@ -38,9 +38,9 @@ export default {
       interval: '',
       cupSubmissions: [],
       images: [],
-      readImage: null,
       cupIndex: 0,
       currentImageIndex: 0,
+      searchLimit: 20,
     }
   },
   props: {
@@ -54,12 +54,16 @@ export default {
             {params: { id: this.battleId, }} )
         .then(response => {
           if(response.data.length > 0){
+            this.searchLimit = 20;
             this.loadBattleInfo(this.battleId);
-            this.cupSubmissions = [];
             this.images = [];
             this.cupSubmissions = [...response.data];
           } else{
-            this.$emit('changeBattleId');
+            console.log("response data was not long enough for battleId : " + this.battleId);
+            if(this.searchLimit >= 0){
+              this.$emit('changeBattleId');
+              this.searchLimit--;
+            }
           }
         }).catch(error =>{
           console.warn(error)
@@ -74,7 +78,7 @@ export default {
       this.nextImage();
     },
     cupIndex(){
-      console.log("cupIndex was called.")
+      console.log("cupIndex is : "+ this.cupIndex +" and battleId is : " + this.battleId);
       this.nextImage();
     },
   },
@@ -98,7 +102,7 @@ export default {
     },
     cupIndexChange(){
       this.cupIndex++;
-      if(this.cupIndex === this.cupSubmissions.length){
+      if(this.cupIndex >= this.cupSubmissions.length){
         this.cupIndex = 0;
         this.$emit('changeBattleId');
       }
@@ -130,7 +134,6 @@ export default {
         await (async () => {
           await axios.get('http://localhost:8081/api/images',{params: { path: path },
             responseType: 'blob'}).then(response => {
-            console.log(response);
             let url = URL.createObjectURL(response.data)
             this.images = [...this.images, {url: url, path: path}];
           }).catch(error => {
@@ -141,7 +144,6 @@ export default {
       } else{
         this.images = [...this.images];
       }
-      console.log("Tries to load an image . Finds : "+this.images.find(element => element.path === path));
       this.currentImageIndex = this.images.findIndex(image => image.path === path);
       this.$refs.image.style.display = "block";
       this.imageUp = true;
