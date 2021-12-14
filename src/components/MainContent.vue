@@ -2,11 +2,15 @@
   <div id="battle-content" class="content-container">
     <div class="cup-container">
       <div id="cup-image" class="image-container cup-content">
-        <div v-if="loggedIn" id="test-main" class="test">
-          <div @click="downVote" id="test-left" class="test"><span class="material-icons">arrow_downward</span></div>
-          <div @click="upVote" id="test-right" class="test"><span class="material-icons">arrow_upward</span></div>
+        <div v-if="loggedIn" id="rate-main" class="rate">
+          <div @click="downVote" id="rate-left" class="rate">
+            <div class="circle"><span class="material-icons">arrow_downward</span></div>
+          </div>
+          <div @click="upVote" id="rate-right" class="rate">
+            <div class="circle"><span class="material-icons">arrow_upward</span></div>
+          </div>
         </div>
-        <img ref="image" :src="(images[currentIndex] !== undefined) ? images[currentIndex]: null" alt="winner photo">
+        <img class="mainImage" ref="image" :src="(images[currentIndex] !== undefined) ? images[currentIndex]: null" alt="winner photo">
       </div>
       <div v-if="imageUp" id="cup-string" class="cup-text cup-content">
         <h3 ref="name">{{ cupData.name }}</h3>
@@ -226,47 +230,47 @@ export default {
 
 .cup-text {
   width: auto;
+  min-width: 100px;
   background-color: #404040;
   justify-content: space-around;
   color: white;
 }
 
-.test {
+.rate {
   height: 100%;
   top:0;
   position: absolute;
 }
 
-#test-main {
+#rate-main {
   left: 0;
   width: 100%;
 }
 
-#test-left {
+#rate-left {
   display: flex;
   align-items: center;
   left: 0;
   width: 50%;
 }
 
-#test-left:hover {
+#rate-left:hover {
   cursor: pointer;
 }
 
-#test-main span {
+#rate-main span, #rate-main .circle {
   display: none;
-  margin: 50px;
 }
 
-#test-left:hover span {
+#rate-left:hover span, #rate-left:hover .circle {
   display: block;
 }
 
-#test-right:hover span {
+#rate-right:hover span, #rate-right:hover .circle {
   display: block;
 }
 
-#test-right {
+#rate-right {
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
@@ -274,7 +278,15 @@ export default {
   width: 50%;
 }
 
-#test-right:hover {
+.circle {
+  background-color: white;
+  border-radius: 50px;
+  margin: 40px;
+  padding: 5px;
+  outline: 1px solid black;
+}
+
+#rate-right:hover {
   cursor: pointer;
 }
 
