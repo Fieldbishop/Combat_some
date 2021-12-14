@@ -77,10 +77,11 @@ export default {
   right: 0;
   left: 0;
   z-index: 10;
+  box-shadow: rgba(0,0,0,.11) 0 1px;
 }
 
 .navbar {
-  background: #eeeeee;
+  background: white;
   height: 56px;
   position: relative;
   display: flex;
@@ -105,17 +106,19 @@ export default {
   margin-left: 0;
 }
 
-.navbar-left * {
-  margin: 5px;
+.navbar-left a {
+  margin: 25px;
+  color: black;
+}
+
+.navbar-left a:hover {
+  color: #0690DB;
+  cursor: pointer;
 }
 
 @media (max-width: 590px) {
   .nav-container {
     justify-content: space-around;
-  }
-
-  .navbar-left .nav-link{
-    padding: 0;
   }
 
   .log-text, .sign-text {
@@ -148,7 +151,6 @@ export default {
 }
 
 .log-text, .sign-text {
-  background-color: #d33c40;
   margin-right: 10px;
   padding: 8px;
   border-radius: 25px;
@@ -158,9 +160,30 @@ export default {
   overflow: hidden;
 }
 
+.log-text, .log-icon {
+  background-color: #0690DB;
+  color: white;
+}
+
+.log-text:hover, .log-icon:hover {
+  background-color: #12A7F8;
+  color: black;
+  cursor: pointer;
+}
+
+.sign-text, .sign-icon {
+  background-color: #0576B3;
+  color: white;
+}
+
+.sign-text:hover, .sign-icon:hover {
+  background-color: #05699E;
+  color: black;
+  cursor: pointer;
+}
+
 .log-icon, .sign-icon {
   margin-right: 15px;
-  background-color: #d33c40;
   padding: 10px;
   border-radius: 25px;
   align-items: center;
@@ -168,7 +191,7 @@ export default {
 }
 
 .log-icon:hover .material-icons, .sign-icon:hover .material-icons {
-  color: white;
+  color: black;
 }
 
 .log-icon:hover, .sign-icon:hover {
@@ -176,16 +199,8 @@ export default {
 }
 
 .log-icon .material-icons, .sign-icon .material-icons {
-  color: black;
+  color: white;
   font-size: 33px;
-}
-
-.log-icon:hover {
-  background-color: #888888;
-}
-
-.sign-icon:hover {
-  background-color: #888888;
 }
 
 .navbar-right ul form input {
@@ -194,19 +209,13 @@ export default {
 }
 
 .nav-link {
-  color: #2c3e50;
   text-align: center;
   padding: 16px;
   text-decoration: none;
 }
 
-.nav-link:hover {
-  color: cadetblue;
-  cursor: pointer;
-}
-
 a .material-icons:hover {
-  color: white;
+  color: #0690DB;
 }
 
 </style>
