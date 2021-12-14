@@ -30,12 +30,17 @@ module.exports.getLeaderboards = (req, res) => {
 }
 
 function getEndedLeaderboards() {
-    const now = new Date().getTime();
-    let query = "SELECT * FROM battle WHERE endDate = (SELECT MIN(endDate) FROM battle)";
+    let now = new Date().getTime();
+    let then;
+    let type;
+    let id;
+    let query = "SELECT * FROM battle WHERE endDate= (SELECT MIN(endDate) FROM battle WHERE retired IS NULL)";
     (async () => {
         let mysqlResponse = await mysql.mysqlQuery(query, null, 'End date');
         const then = new Date(mysqlResponse[0].endDate).getTime();
+        console.log("lassin testitesti asd = " + then);
         const id = mysqlResponse[0].id;
+        const type = mysqlResponse[0].cupType
         if (now >= then) {
             query = "SELECT userName FROM battle_submission WHERE rating = (SELECT MAX(rating) from battle_submission WHERE battleId = ?)"
             mysqlResponse = await mysql.mysqlQuery(query, id, 'Winner');
@@ -46,15 +51,11 @@ function getEndedLeaderboards() {
                     await mysql.mysqlQuery(query, mysqlResponse[i].userName, "Wins");
                 }
             }
-
-            endBattle(id);
-            startNewBattle()
-            /*query = ""
-            await mysql.mysqlQuery("DELETE FROM user_vote WHERE battleId = ?", id, "User vote delete")
-            await mysql.mysqlQuery("DELETE FROM battle_submission WHERE battleId = ?", id, "Sub delete")
-            await mysql.mysqlQuery("DELETE FROM battle WHERE id = ?", id, "Delete");*/
         }
+        endBattle(id);
+        startNewBattle(type);
     })();
+
 }
 
 module.exports.getEndedLeaderboards = getEndedLeaderboards;
