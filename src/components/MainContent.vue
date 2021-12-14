@@ -212,7 +212,7 @@ export default {
   border: 1px solid #111111;
   max-height: 640px;
   display: none;
-  margin-bottom: 10px;
+  margin: auto auto 10px auto;
 }
 
 .image-container {
@@ -245,6 +245,7 @@ export default {
 #rate-main {
   left: 0;
   width: 100%;
+
 }
 
 #rate-left {
