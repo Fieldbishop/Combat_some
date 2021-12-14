@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const util = require("util");
+const objDebug = require("./utils/debug-object")
 
 /**
  * Connection configurations for mysql database
@@ -7,9 +8,9 @@ const util = require("util");
  */
 let con = mysql.createConnection({
     host: "localhost",
-    port: 3306,
+    port: 3305,
     user: "root",
-    password: "password",
+    password: "rootadming0g0600Yr$",
     database: "some_combat",
     queryFormat: ""
 });
@@ -37,17 +38,27 @@ con.connect(function (err) {
  * @param sql - is for the sql query string
  * @param arg - is for sql query arguments
  * @param httpVerb - keyword for the type of express method used
+ * @param debug - enables debug mode to log information about the query
  * @returns {Promise<*|*>} - a dataset returned from query or an error message
  */
-async function mysqlQuery(sql, arg, httpVerb) {
+async function mysqlQuery(sql, arg, httpVerb, debug = false) {
     try {
         if (arg === undefined || arg === null) {
-            return await query(sql);
+            return await query(sql).then((rows)=>{
+                debugFunc(rows, debug);
+                return rows;
+            });
         } else {
             if (arg.isArray) {
-                return await query(sql, [...arg]);
+                return await query(sql, [...arg]).then((rows)=>{
+                    debugFunc(rows, debug);
+                    return rows;
+                });
             } else {
-                return await query(sql, arg);
+                return await query(sql, arg).then((rows)=>{
+                    debugFunc(rows, debug);
+                    return rows;
+                });
             }
         }
     } catch (err) {
@@ -57,6 +68,14 @@ async function mysqlQuery(sql, arg, httpVerb) {
             console.log("Database Error : " + err);
         }
         return err;
+    }
+}
+function debugFunc(rows, debug){
+    if(debug){
+        objDebug.debugObjects(rows);
+        for (let i = 0; i < rows.length; i++) {
+            console.debug("DEBUG --- returned row number :: " + rows.length)
+        }
     }
 }
 

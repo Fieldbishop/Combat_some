@@ -44,8 +44,10 @@ export default {
   },
   watch: {
     battleId() {
+      this.cupSubmissions = [];
+      this.images = [];
       this.loadBattleInfo(this.battleId);
-      console.log(this.battleId);
+      console.log("The battle id is :: " +this.battleId);
       (async()=>{
         await axios.get('http://localhost:8081/api/submissionData',
             {params: { id: this.battleId, }} )
@@ -91,7 +93,7 @@ export default {
     },
     indexChange(){
       this.currentIndex++;
-      if(!(this.currentIndex === this.cupSubmissions.length)){
+      if((this.currentIndex === this.cupSubmissions.length)){
         this.currentIndex = 0;
       }
     },
