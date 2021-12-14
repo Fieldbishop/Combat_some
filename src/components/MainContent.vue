@@ -291,7 +291,7 @@ export default {
 }
 
 #rate-right .circle:hover .material-icons{
-  color: #05699E;
+  color: #0690DB;
 }
 
 #rate-left .circle:hover .material-icons{

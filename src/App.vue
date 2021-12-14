@@ -123,21 +123,6 @@ export default {
       this.userState.user = null;
     },
 
-    /*voteImage(vote, id) {
-      console.log(id)
-      switch (vote) {
-        case 0:
-          console.log("Downvote");
-          break;
-        case 1:
-          console.log("Upvote");
-          break;
-        default:
-          console.log("Unknown");
-          break;
-      }
-    },*/
-
     async voteImage(vote, id) {
       await this.checkToken(document.cookie);
       if (this.userState.token != null) {
@@ -151,21 +136,6 @@ export default {
             }).catch(error => {
               console.log(error);
             });
-        /*                                                        ONKS TÄÄ SAMPO JOKU TÄRKEE? T: LASSI
-        try {
-          await axios.post("http://localhost:8081/api/rate", {
-            "id": id,
-            "token": this.userState.token,
-            "vote": vote
-          })
-              .then(response => {
-                console.log(response.data);
-              })
-        } catch (error) {
-          console.log(error);
-        }
-        */
-
       } else {
         console.log("NOT LOGGED IN") //GENERIC TOKEN CHECK
       }

@@ -107,4 +107,12 @@ export default {
     top: 10px;
   }
 
+  @media (max-width: 850px) {
+    .dropArea {
+      width: auto;
+      margin-left: 25px;
+      margin-right: 25px;
+    }
+  }
+
 </style>
