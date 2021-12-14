@@ -47,15 +47,13 @@ export default {
       this.cupSubmissions = [];
       this.images = [];
       this.loadBattleInfo(this.battleId);
-      console.log("The battle id is :: " +this.battleId);
       (async()=>{
         await axios.get('http://localhost:8081/api/submissionData',
             {params: { id: this.battleId, }} )
         .then(response => {
-          console.log(response.data);
           this.cupSubmissions = [...response.data];
         }).catch(error =>{
-          console.log(error)
+          console.warn(error)
         })
       })()
     },
@@ -69,17 +67,14 @@ export default {
     currentIndex(){
       this.nextImage();
     },
-    images(){
-      console.log(this.images[this.currentIndex]);
-    },
   },
   mounted() {
     this.interval = setInterval(() => {
       if(!this.cupInfo && this.battleId){
-        console.log("should load battleInfo again!");
         this.loadBattleInfo(this.battleId);
+      } else{
+        this.cupData.time = this.countdown(this.cupInfo.endDate);
       }
-      this.cupData.time = this.countdown(this.cupInfo.endDate);
     }, 1000);
   },
   methods: {
@@ -93,15 +88,15 @@ export default {
     },
     indexChange(){
       this.currentIndex++;
-      if((this.currentIndex === this.cupSubmissions.length)){
+      if(this.currentIndex === this.cupSubmissions.length){
         this.currentIndex = 0;
+        this.$emit('changeBattleId', null);
       }
     },
     nextImage() {
       if(this.images.length !== this.cupSubmissions.length){
         this.$refs.image.style.display = "none";
         this.imageUp = false;
-        console.log(this.currentIndex);
         this.loadImage(this.cupSubmissions[this.currentIndex].imageFilepath);
       }
     },
@@ -114,31 +109,24 @@ export default {
       await axios.get("http://localhost:8081/api/leaderboards",
           {params: { id: id, }})
       .then(response => {
-        //console.log(response);
         this.cupInfo = response.data[0];
         this.cupData.time = this.countdown(response.data[0].endDate);
       }).catch(error =>{
-        console.log(error);
+        console.warn(error);
       })
     },
     async loadImage(path){
-      console.log("Loading image with path : " + path);
       await (async () => {
         await axios.get('http://localhost:8081/api/images',{params: { path: path },
           responseType: 'blob'}).then(response => {
-          console.log(typeof response.data);
           let url = URL.createObjectURL(response.data)
-          console.log(url);
           this.images = [...this.images, url];
           this.$refs.image.style.display = "block";
           this.imageUp = true;
         }).catch(error => {
-          console.log(error)
+          console.warn(error)
         })
       })()
-    },
-    defineRandomImageOrder(){
-      this.shuffle();
     },
     //stack overflow shuffle code. https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
     shuffle() {
@@ -178,7 +166,6 @@ export default {
       return days + hours +  minutes +  seconds;
     }
   },
-
 }
 
 </script>
