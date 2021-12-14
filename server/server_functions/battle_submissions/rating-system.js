@@ -16,13 +16,19 @@ module.exports.vote = (req, res) => {
     const battleSubmissionId = req.body.id;
     const vote = req.body.vote;
     const battleId = req.body.battleId;
+    let oldVote = 0;
     let query = "SELECT * FROM user_vote WHERE (userName = ? AND battleSubmissionId = ?)";
     (async () => {
         const mysqlResponse = await mysql.mysqlQuery(query, [username, battleSubmissionId], req.method);
         let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
+        try {
+            oldVote = mysqlResponse[0].vote;
+        }catch (err) {
+            oldVote = 0;
+        }
         let args;
         if (status === 200 && mysqlResponse[0]) {
-            query = "UPDATE user_vote set vote = ? WHERE (userName = ? AND id = ?)";
+            query = "UPDATE user_vote set vote = ? WHERE (userName = ? AND battleSubmissionId = ?)";
             args = [vote, username, battleSubmissionId];
         } else {
             query = "INSERT INTO user_vote VALUES(?,?,?,?,?)";
@@ -30,7 +36,7 @@ module.exports.vote = (req, res) => {
         }
         const secondResponse = await mysql.mysqlQuery(query, args, req.method);
         status = mysqlHelpers.httpStatusWithSqlResponse(secondResponse);
-        if (status === 200) {
+        if (status === 200 && vote !== oldVote) {
             let responseObj = await updateRating(vote, battleSubmissionId, req.method);
             res.status(responseObj.status).send(responseObj.response);
         } else {
