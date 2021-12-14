@@ -212,7 +212,7 @@ export default {
   border: 1px solid #111111;
   max-height: 640px;
   display: none;
-  margin-bottom: 10px;
+  margin: auto auto 10px auto;
 }
 
 .image-container {
@@ -230,7 +230,7 @@ export default {
 
 .cup-text {
   width: auto;
-  min-width: 100px;
+  min-width: 400px;
   background-color: #372F30;
   justify-content: space-around;
   color: white;
@@ -245,6 +245,7 @@ export default {
 #rate-main {
   left: 0;
   width: 100%;
+
 }
 
 #rate-left {
