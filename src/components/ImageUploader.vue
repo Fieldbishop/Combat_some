@@ -28,7 +28,6 @@ export default {
   methods: {
     catchFile(event) {
       let files;
-      //console.log(event);
       if(typeof event.target.files != "undefined"){
         files = event.target.files;
       } else{
@@ -41,7 +40,6 @@ export default {
       formData.append("image", files[0]);
       formData.append("battleId", this.battleId);
       formData.append("username", this.username);
-      console.log(files[0]);
       axios.post('http://127.0.0.1:8081/api/upload_file', formData
       ,{
         headers: {
@@ -49,7 +47,6 @@ export default {
         }
       })
       .then(response => {
-        console.log(response);
         if(response.status === 200){
           alert("Submission completed successfully.");
           axios.patch('http://localhost:8081/api/usersubs', {

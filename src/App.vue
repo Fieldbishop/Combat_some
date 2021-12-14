@@ -17,7 +17,7 @@
         <user @closeModal="toggleModal"/>
       </template>
       <template v-slot:submitSlot>
-        <image-uploader :battleId="battleId" :username="userState.user" @closeModal="toggleModal"/>
+        <image-uploader :battleId="battleIdUpload" :username="userState.user" @closeModal="toggleModal"/>
       </template>
     </modal-container>
     <main-content :loggedIn="userState.loggedIn" :battleId="battleId" @vote="voteImage" @changeBattleId="changeBattleId"/>
@@ -61,6 +61,7 @@ export default {
         loggedIn: false,
       },
       battleId: undefined,
+      battleIdUpload: undefined,
       cupIds: [],
     }
   },
@@ -85,14 +86,14 @@ export default {
       if (id.length === 1) {
         this.modalId = id[0];
       } else {
-        this.battleId = id[1];
+        this.battleIdUpload = id[1];
         this.modalId = id[0];
       }
     },
 
     showBattle(id) {
       this.modalVisible = false;
-      this.battleId = id;
+      this.battleIdUpload = id;
     },
 
     handleLogin(data) {
