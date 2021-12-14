@@ -8,9 +8,9 @@ const objDebug = require("./utils/debug-object");
  */
 let con = mysql.createConnection({
     host: "localhost",
-    port: 3305,
+    port: 3306,
     user: "root",
-    password: "rootadming0g0600Yr$",
+    password: "password",
     database: "some_combat",
     queryFormat: ""
 });

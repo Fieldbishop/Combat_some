@@ -122,22 +122,20 @@ module.exports.endBattle = (id) => {
 }
 
 module.exports.deleteSubmissionImages = (battleId) => {
-    console.log("lassi test 1");
-    let query = "SELECT imageFilepath WHERE battleId = ?";
+    let query = "SELECT imageFilepath FROM battle_submission WHERE battleId = ?";
     let args = battleId;
     (async () => {
-        console.log("lassi test 2");
         let mysqlResponse = await mysql.mysqlQuery(query, args, "Delete files");
+        console.log(mysqlResponse.length);
         let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
         if (status !== 200) {
-            console.error(mysqlResponse);
+            console.log("sqlresponso: " + mysqlResponse);
         }
+        console.log("sqlresponso: " + mysqlResponse);
         if(mysqlResponse.length > 0){
-            console.log("lassi test 3");
             for (let i = 0; i < mysqlResponse.length; i++) {
-                console.log("lassi test 4");
-                console.log("trying to delete file " + mysqlResponse[i].imageFilepath)
-                deleteFile(mysqlResponse[i].imageFilepath);
+                console.log("trying to delete file " + mysqlResponse[i].imageFilepath);
+                await deleteFile(mysqlResponse[i].imageFilepath);
             }
         }
     })();

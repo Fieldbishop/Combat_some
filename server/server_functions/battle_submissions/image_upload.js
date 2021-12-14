@@ -22,7 +22,7 @@ module.exports.uploadImage = (req, res) =>{
   })()
 }
 
-module.exports.deleteFile = (path) => {
-  fs.unlinkSync(path);
+module.exports.deleteFile = async function asyncCall(path){
+  fs.unlink(path, err => {console.log(err)});
   console.log('File deleted!');
-}
+};
