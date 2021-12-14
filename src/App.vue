@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav-bar :loggedIn="userState.loggedIn" @signOut="handleSignOut" @modal="toggleModal"/>
+    <nav-bar :loggedIn="userState.loggedIn" :username="userState.user" @signOut="handleSignOut" @modal="toggleModal"/>
     <!-- ':' emits, '@' listens -->
     <modal-container v-if="modalVisible" :modalId="modalId">
       <template v-slot:loginSlot>
@@ -106,6 +106,7 @@ export default {
     justLogin(username) {
       this.userState.loggedIn = true;
       this.userState.user = username;
+      console.log("USER", this.userState.user)
     },
 
     setToken(token) {
@@ -176,6 +177,7 @@ export default {
         await axios.post("http://localhost:8081/api/verify", {
           "token": token
         }).then(response => {
+          console.log("RES", response.data)
           if (!response.data.error) {
             this.justLogin(response.data.data.username)
           } else {
