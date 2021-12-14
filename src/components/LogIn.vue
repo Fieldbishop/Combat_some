@@ -1,18 +1,3 @@
-<!--
- Log In component
-
- Etusivun headerissa painamalla "Log in" tekstiä, tuodaan esiin Log in form.
-
-  Täyttämällä kohdat 'User name' ja 'Password', lähetetään login olio pää applikaatioon:
-
-  login {
-    name: '',
-    psswd: '',
-  }
-
-
- -->
-
 <template>
   <div id="log-in">
     <form class="modal-form" @submit.prevent="handleLogIn">

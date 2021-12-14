@@ -6,7 +6,6 @@
           <a href="/" style="float: left;">
             <span class="material-icons" style="font-size: 50px">
               thumb_up
-              <!-- <img id="logo" src="../assets/fist_logo.png" alt="imagebattle"> -->
             </span>
           </a>
           <a class="nav-link" id="leaderboards" @click="$emit('modal', 0)"><b>Leaderboards</b></a>

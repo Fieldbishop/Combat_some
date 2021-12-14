@@ -1,18 +1,3 @@
-<!--
- Sign Up component
-
- Etusivun headerissa painamalla "Sign up" tekstiä, tuodaan esiin Sign up form.
-
-  Täyttämällä kohdat 'User name', 'Password' ja 'Repeat Password', lähetetään signup olio pää applikaatioon:
-
-  signUp {
-    name: '',
-    psswd: '',
-  }
-
-  Form tarkistaa että salasana on kirjoitettu samalla lailla kumpaankin input laatikkoon.
- -->
-
 <template>
   <div id="sign-up">
     <form class="modal-form" @submit.prevent="handleSignUp">
