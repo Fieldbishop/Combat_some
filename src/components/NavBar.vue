@@ -23,7 +23,7 @@
         <div id="navbar-logged" class="navbar-right" v-else>
           <ul>
             <li>
-              <a class="nav-link" @click="$emit('modal', 3)"><b>User</b></a>
+              <a class="nav-link" @click="$emit('modal', 3)"><b>{{username}}</b></a>
             </li>
             <li>
               <a class="nav-link" @click="signOut()"><b>Sign out</b></a> <!-- this.loggedIn = false -->
@@ -45,7 +45,7 @@ export default {
   },
   props: {
     loggedIn: Boolean,
-
+    username: String
   },
   methods: {
     signOut() {   // What should happen when logging off?
