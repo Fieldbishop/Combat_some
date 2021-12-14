@@ -86,8 +86,8 @@ export default {
   .dropArea{
     width: 50%;
 
-    border: dashed 2px darkgray;
-    color: darkgray;
+    border: dashed 2px #A39A92;
+    color: #A39A92;
     padding: 5em;
 
   }

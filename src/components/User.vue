@@ -1,7 +1,9 @@
 <template>
   <div id="user" class="user-body">
     <div class="user-header">
-      <h3>{{ this.userData.username }}</h3>
+      <div>
+        <h3>{{ this.userData.username }}</h3>
+      </div>
       <button class="close" type="button" @click="$emit('closeModal')">&times;</button>
     </div>
     <hr>
@@ -61,6 +63,13 @@ export default {
 .user-header {
   display: block;
   position: relative;
+}
+
+.user-header div {
+  text-align: center;
+  margin: auto;
+  width: 50%;
+  overflow-wrap: break-word;
 }
 
 .user-header .close {
