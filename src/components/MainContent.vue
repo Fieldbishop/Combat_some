@@ -230,7 +230,7 @@ export default {
 
 .cup-text {
   width: auto;
-  min-width: 100px;
+  min-width: 400px;
   background-color: #372F30;
   justify-content: space-around;
   color: white;
