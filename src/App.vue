@@ -214,12 +214,12 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #372F30;
   margin-top: 72px;
 }
 
 body {
-  color: #404040;
+  color: #372F30;
   background: white;
   font-size: 1rem;
 }
@@ -280,7 +280,7 @@ body {
 }
 
 .confirmButton {
-  background-color: #04AA6D;
+  background-color: #0690DB;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -289,12 +289,12 @@ body {
 }
 
 .confirmButton:hover {
-  background-color: #0ae494;
+  background-color: #12A7F8;
   cursor: pointer;
 }
 
 .cancelButton {
-  background-color: #d33c40;
+  background-color: #EF3E36;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -303,12 +303,12 @@ body {
 }
 
 .cancelButton:hover {
-  background-color: #f72a1b;
+  background-color: #E21D12;
   cursor: pointer;
 }
 
 .error-message {
-  color: #d33c40;
+  color: #EF3E36;
   font-weight: 500;
 }
 

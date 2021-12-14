@@ -4,10 +4,10 @@
       <div id="cup-image" class="image-container cup-content">
         <div v-if="loggedIn" id="rate-main" class="rate">
           <div @click="downVote" id="rate-left" class="rate">
-            <div class="circle"><span class="material-icons">arrow_downward</span></div>
+            <div class="circle"><span class="material-icons">thumb_down</span></div>
           </div>
           <div @click="upVote" id="rate-right" class="rate">
-            <div class="circle"><span class="material-icons">arrow_upward</span></div>
+            <div class="circle"><span class="material-icons">thumb_up</span></div>
           </div>
         </div>
         <img class="mainImage" ref="image" :src="(images[currentIndex] !== undefined) ? images[currentIndex]: null" alt="winner photo">
@@ -231,7 +231,7 @@ export default {
 .cup-text {
   width: auto;
   min-width: 100px;
-  background-color: #404040;
+  background-color: #372F30;
   justify-content: space-around;
   color: white;
 }
@@ -288,6 +288,14 @@ export default {
 
 #rate-right:hover {
   cursor: pointer;
+}
+
+#rate-right .circle:hover .material-icons{
+  color: #05699E;
+}
+
+#rate-left .circle:hover .material-icons{
+  color: #d33c40;
 }
 
 </style>

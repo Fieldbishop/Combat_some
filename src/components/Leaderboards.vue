@@ -115,7 +115,7 @@ export default {
 <style scoped>
 
 .leaderboards-body {
-  background-color: #eeeeee;
+  background-color: white;
   margin: 50px auto 10% auto;
   min-width: 400px;
   max-width: 550px;
@@ -128,14 +128,14 @@ export default {
 }
 
 .leaderboards-header {
-  background-color: #888888;
+  background-color: #372F30;
   padding: 2px;
   position: sticky;
   top: 0;
   min-width: 100%;
   display: block;
   text-align: left;
-  color: black;
+  color: white;
 }
 
 .leaderboards-header h3 {
@@ -143,7 +143,7 @@ export default {
 }
 
 .leaderboards-header .close {
-  background-color: #888888;
+  background-color: #372F30;
   top: 10px;
 }
 
@@ -165,7 +165,8 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-  background-color: #0ae494;
+  background-color: #05699E;
+  color: white;
 }
 
 td:last-child {
@@ -173,14 +174,14 @@ td:last-child {
 }
 
 .tableButton {
-  background-color: #04AA6D;
+  background-color: #0683C6;
   color: white;
   border: none;
   padding: 8px 15px;
 }
 
 .tableButton:hover {
-  background-color: #d33c40;
+  background-color: #12A7F8;
   cursor: pointer;
 }
 
