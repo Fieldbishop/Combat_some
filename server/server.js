@@ -96,11 +96,17 @@ app.get('/api/leaderboard', function (req, res) {
     leaderBoards.getLeaderboardsByWins(req, res);
 });
 
+app.get('/api/getOpenCups',cors(corsOptions), (req,res) =>{
+    battleCoordinator.checkIfNoBattle();
+    leaderBoards.getEndedLeaderboards();
+    leaderBoards.getOpenCups(req, res);
+});
+
 app.get('/api/leaderboards', cors(corsOptions), (req, res) => {
     battleCoordinator.checkIfNoBattle();
     leaderBoards.getEndedLeaderboards();
     leaderBoards.getLeaderboards(req, res);
-})
+});
 
 
 /**

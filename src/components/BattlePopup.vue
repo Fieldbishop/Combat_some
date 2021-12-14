@@ -17,7 +17,8 @@ export default {
   left: 50%;
   transform: translateX(-50%);
 
-  background-color: #0ae494;
+  background-color: #0690DB;
+  color: white;
   border: 1px solid #111111;
   padding-right: 25px;
   padding-left: 25px;
@@ -27,7 +28,7 @@ export default {
 
 #join-battle:hover {
   cursor: pointer;
-  background-color: #04AA6D;
-  color: white;
+  background-color: #12A7F8;
+  color: black;
 }
 </style>

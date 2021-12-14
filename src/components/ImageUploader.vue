@@ -86,8 +86,8 @@ export default {
   .dropArea{
     width: 50%;
 
-    border: dashed 2px darkgray;
-    color: darkgray;
+    border: dashed 2px #A39A92;
+    color: #A39A92;
     padding: 5em;
 
   }
@@ -105,6 +105,14 @@ export default {
 
   .leaderboards-header .close {
     top: 10px;
+  }
+
+  @media (max-width: 850px) {
+    .dropArea {
+      width: auto;
+      margin-left: 25px;
+      margin-right: 25px;
+    }
   }
 
 </style>

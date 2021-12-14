@@ -29,33 +29,49 @@ module.exports.getLeaderboards = (req, res) => {
     })();
 }
 
+module.exports.getOpenCups = (req,res) =>{
+    let query;
+    if (Object.keys(req.query).length !== 0) {
+        query = "SELECT * FROM battle WHERE id = ? AND retired IS NULL";
+    } else {
+        query = "SELECT * FROM battle WHERE retired IS NULL";
+    }
+    (async () => {
+        const mysqlResponse = await mysql.mysqlQuery(query, req.query.id, 'get');
+        const status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
+        return res.status(status).send(mysqlResponse);
+    })();
+}
+
 function getEndedLeaderboards() {
     let now = new Date().getTime();
-    let then;
-    let type;
     let id;
+    let type;
     let query = "SELECT * FROM battle WHERE endDate= (SELECT MIN(endDate) FROM battle WHERE retired IS NULL)";
     (async () => {
-        let mysqlResponse = await mysql.mysqlQuery(query, null, 'End date');
-        const then = new Date(mysqlResponse[0].endDate).getTime();
-        console.log("lassin testitesti asd = " + then);
-        const id = mysqlResponse[0].id;
-        const type = mysqlResponse[0].cupType
-        if (now >= then) {
-            query = "SELECT userName FROM battle_submission WHERE rating = (SELECT MAX(rating) from battle_submission WHERE battleId = ?)"
-            mysqlResponse = await mysql.mysqlQuery(query, id, 'Winner');
-
-            if (mysqlResponse.length > 0) {
-                query = "UPDATE user set wins = wins+1 WHERE userName = ?";
-                for (let i = 0; i < mysqlResponse.length; i++) {
-                    await mysql.mysqlQuery(query, mysqlResponse[i].userName, "Wins");
+        let mysqlResponse1 = await mysql.mysqlQuery(query, null, 'End date');
+        if(mysqlResponse1.length > 0){
+            const then = new Date(mysqlResponse1[0].endDate).getTime();
+            let id = mysqlResponse1[0].id;
+            if (now >= then) {
+                query = "SELECT userName FROM battle_submission WHERE rating = (SELECT MAX(rating) from battle_submission WHERE battleId = ?)"
+                let mysqlResponse2 = await mysql.mysqlQuery(query, id, 'Winner');
+                if (mysqlResponse2.length > 0) {
+                    query = "UPDATE user set wins = wins+1 WHERE userName = ?";
+                    for (let i = 0; i < mysqlResponse.length; i++) {
+                        await mysql.mysqlQuery(query, mysqlResponse2[i].userName, "Wins");
+                    }
+                }
+                if(mysqlResponse1.length > 0){
+                    for (let i = 0; i < mysqlResponse1.length; i++) {
+                        id = mysqlResponse1[i].id;
+                        type = mysqlResponse1[i].cupType;
+                        endBattle(id);
+                        startNewBattle(type);
+                    }
                 }
             }
         }
-        endBattle(id);
-        startNewBattle(type);
     })();
-
 }
-
 module.exports.getEndedLeaderboards = getEndedLeaderboards;
