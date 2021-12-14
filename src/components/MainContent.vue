@@ -59,7 +59,6 @@ export default {
             this.images = [];
             this.cupSubmissions = [...response.data];
           } else{
-            console.log("response data was not long enough for battleId : " + this.battleId);
             if(this.searchLimit >= 0){
               this.$emit('changeBattleId');
               this.searchLimit--;
@@ -78,7 +77,6 @@ export default {
       this.nextImage();
     },
     cupIndex(){
-      console.log("cupIndex is : "+ this.cupIndex +" and battleId is : " + this.battleId);
       this.nextImage();
     },
   },
