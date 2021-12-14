@@ -106,7 +106,6 @@ export default {
     justLogin(username) {
       this.userState.loggedIn = true;
       this.userState.user = username;
-      console.log("USER", this.userState.user)
     },
 
     setToken(token) {
@@ -140,6 +139,7 @@ export default {
     },*/
 
     async voteImage(vote, id) {
+      await this.checkToken(document.cookie);
       if (this.userState.token != null) {
         await axios.put("http://localhost:8081/api/newVote", {
           "vote" : vote,
@@ -177,7 +177,6 @@ export default {
         await axios.post("http://localhost:8081/api/verify", {
           "token": token
         }).then(response => {
-          console.log("RES", response.data)
           if (!response.data.error) {
             this.justLogin(response.data.data.username)
           } else {
@@ -317,7 +316,7 @@ body {
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 50px; /* Preferred icon size */
+  font-size: 30px; /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
