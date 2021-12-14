@@ -6,7 +6,7 @@
           <div @click="downVote" id="test-left" class="test"><span class="material-icons">arrow_downward</span></div>
           <div @click="upVote" id="test-right" class="test"><span class="material-icons">arrow_upward</span></div>
         </div>
-        <img ref="image" :src="(images[currentIndex] !== undefined) ? images[currentIndex]: null" alt="winner photo">
+        <img ref="image" :src="(images[currentImageIndex] !== undefined) ? images[currentImageIndex].url: null" alt="winner photo">
       </div>
       <div v-if="imageUp" id="cup-string" class="cup-text cup-content">
         <h3 ref="name">{{ cupData.name }}</h3>
@@ -35,7 +35,8 @@ export default {
       cupSubmissions: [],
       images: [],
       readImage: null,
-      currentIndex: 0,
+      cupIndex: 0,
+      currentImageIndex: 0,
     }
   },
   props: {
@@ -44,14 +45,18 @@ export default {
   },
   watch: {
     battleId() {
-      this.cupSubmissions = [];
-      this.images = [];
-      this.loadBattleInfo(this.battleId);
       (async()=>{
         await axios.get('http://localhost:8081/api/submissionData',
             {params: { id: this.battleId, }} )
         .then(response => {
-          this.cupSubmissions = [...response.data];
+          if(response.data.length > 0){
+            this.loadBattleInfo(this.battleId);
+            this.cupSubmissions = [];
+            this.images = [];
+            this.cupSubmissions = [...response.data];
+          } else{
+            this.$emit('changeBattleId');
+          }
         }).catch(error =>{
           console.warn(error)
         })
@@ -64,7 +69,8 @@ export default {
       this.shuffle();
       this.nextImage();
     },
-    currentIndex(){
+    cupIndex(){
+      console.log("cupIndex was called.")
       this.nextImage();
     },
   },
@@ -79,25 +85,25 @@ export default {
   },
   methods: {
     upVote() {
-      this.$emit('vote', 1, this.cupSubmissions[this.currentIndex].id);
-      this.indexChange();
+      this.$emit('vote', 1, this.cupSubmissions[this.cupIndex].id);
+      this.cupIndexChange();
     },
     downVote() {
-      this.$emit('vote', -1, this.cupSubmissions[this.currentIndex].id);
-      this.indexChange();
+      this.$emit('vote', -1, this.cupSubmissions[this.cupIndex].id);
+      this.cupIndexChange();
     },
-    indexChange(){
-      this.currentIndex++;
-      if(this.currentIndex === this.cupSubmissions.length){
-        this.currentIndex = 0;
-        this.$emit('changeBattleId', null);
+    cupIndexChange(){
+      this.cupIndex++;
+      if(this.cupIndex === this.cupSubmissions.length){
+        this.cupIndex = 0;
+        this.$emit('changeBattleId');
       }
     },
     nextImage() {
       if(this.images.length !== this.cupSubmissions.length){
         this.$refs.image.style.display = "none";
         this.imageUp = false;
-        this.loadImage(this.cupSubmissions[this.currentIndex].imageFilepath);
+        this.loadImage(this.cupSubmissions[this.cupIndex].imageFilepath);
       }
     },
     updateElements() {
@@ -116,17 +122,25 @@ export default {
       })
     },
     async loadImage(path){
-      await (async () => {
-        await axios.get('http://localhost:8081/api/images',{params: { path: path },
-          responseType: 'blob'}).then(response => {
-          let url = URL.createObjectURL(response.data)
-          this.images = [...this.images, url];
-          this.$refs.image.style.display = "block";
-          this.imageUp = true;
-        }).catch(error => {
-          console.warn(error)
-        })
-      })()
+      if(!this.images.find(element => element.path === path)){
+        await (async () => {
+          await axios.get('http://localhost:8081/api/images',{params: { path: path },
+            responseType: 'blob'}).then(response => {
+            console.log(response);
+            let url = URL.createObjectURL(response.data)
+            this.images = [...this.images, {url: url, path: path}];
+          }).catch(error => {
+            console.warn(error)
+            return error
+          })
+        })()
+      } else{
+        this.images = [...this.images];
+      }
+      console.log("Tries to load an image . Finds : "+this.images.find(element => element.path === path));
+      this.currentImageIndex = this.images.findIndex(image => image.path === path);
+      this.$refs.image.style.display = "block";
+      this.imageUp = true;
     },
     //stack overflow shuffle code. https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
     shuffle() {
