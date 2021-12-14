@@ -29,6 +29,20 @@ module.exports.getLeaderboards = (req, res) => {
     })();
 }
 
+module.exports.getOpenCups = (req,res) =>{
+    let query;
+    if (Object.keys(req.query).length !== 0) {
+        query = "SELECT * FROM battle WHERE id = ? AND retired IS NULL";
+    } else {
+        query = "SELECT * FROM battle WHERE retired IS NULL";
+    }
+    (async () => {
+        const mysqlResponse = await mysql.mysqlQuery(query, req.query.id, 'get');
+        const status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
+        return res.status(status).send(mysqlResponse);
+    })();
+}
+
 function getEndedLeaderboards() {
     let now = new Date().getTime();
     let id;
