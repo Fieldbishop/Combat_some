@@ -118,18 +118,21 @@ export default {
   background-color: #eeeeee;
   margin: 50px auto 10% auto;
   min-width: 400px;
-  max-width: 60%;
+  max-width: 550px;
   min-height: 500px;
   max-height: 75%;
   overflow: auto;
   border: 1px solid #111111;
+  position: relative;
+  overflow-x: hidden;
 }
 
 .leaderboards-header {
   background-color: #888888;
-  margin-bottom: 10px;
   padding: 2px;
-  position: relative;
+  position: sticky;
+  top: 0;
+  min-width: 100%;
   display: block;
   text-align: left;
   color: black;
@@ -166,14 +169,14 @@ tr:hover {
 }
 
 td:last-child {
-  padding: 10px 0 10px 10px;
+  padding: 5px 0 5px 10px;
 }
 
 .tableButton {
   background-color: #04AA6D;
   color: white;
   border: none;
-  padding: 5px 15px;
+  padding: 8px 15px;
 }
 
 .tableButton:hover {
@@ -183,12 +186,16 @@ td:last-child {
 
 @media (max-width: 780px) {
   td, th {
-    padding: 0 25px 0 10px;
+    padding: 15px 25px 15px 10px;
     height: auto;
   }
 
   .tableButton {
     padding: 20px 20px;
+  }
+
+  .leaderboards-body {
+    max-width: 80%;
   }
 }
 
