@@ -16,18 +16,27 @@ const themes = [
     "Extreme"
 ];
 
+module.exports.checkIfNoBattle = () => {
+    let query = "SELECT * from battle";
+    (async () => {
+        let mysqlResponse = await mysql.mysqlQuery(query, null, "checkIfNoBattle");
+        let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
+        if (mysqlResponse.length === 0) {
+            this.startNewBattle();
+        }
+    })();
+}
+
 /**
  * Creates an hourly cup
- * @param req
- * @param res
  */
-module.exports.startNewBattle = (req, res) => {
-    let time = Date.now() + 3600000;
+module.exports.startNewBattle = () => {
+    let time = Math.floor((Date.now() + 3600000)/1000);
     let category = themes[Math.floor(Math.random() * themes.length)];
-    let query = "INSERT INTO battle VALUES(null,null,FROM_UNIXTIME(?),?)";
-    let args = [time, category];
+    let query = "INSERT INTO battle VALUES(null,null,FROM_UNIXTIME("+time+"),?)";
+    let args = category;
     (async () => {
-        let mysqlResponse = await mysql.mysqlQuery(query, args, req.method);
+        let mysqlResponse = await mysql.mysqlQuery(query, args, "generateBattle");
         let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
         return {
             response: mysqlResponse,
@@ -39,12 +48,11 @@ module.exports.startNewBattle = (req, res) => {
 /**
  * Ends a cup, checks the winner and updates it into cup, removes all votes cast for the ending cup
  * and clears the entries for submitted images from the database
- * @param req
- * @param res
+ * @param id
  */
-module.exports.endBattle = (req, res) => {
-    console.log(req.battleId());
-    const btlID = req.battleId();
+module.exports.endBattle = (id) => {
+    console.log(id);
+    const btlID = id;
     let winner;
     let query;
     let args;
@@ -89,9 +97,9 @@ module.exports.endBattle = (req, res) => {
         }
         (async () => {
             if (i === 0) {
-                winner = await mysql.mysqlQuery(query, args, req.method);       //TODO miten sais kivasti erroreiden kanssa :)
+                winner = await mysql.mysqlQuery(query, args, null);       //TODO miten sais kivasti erroreiden kanssa :)
             } else {
-                let mysqlResponse = await mysql.mysqlQuery(query, args, req.method);
+                let mysqlResponse = await mysql.mysqlQuery(query, args, null);
                 let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
                 return {
                     response: mysqlResponse,

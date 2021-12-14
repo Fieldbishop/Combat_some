@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 const util = require("util");
-const objDebug = require("./utils/debug-object")
+const objDebug = require("./utils/debug-object");
 
 /**
  * Connection configurations for mysql database
@@ -8,9 +8,9 @@ const objDebug = require("./utils/debug-object")
  */
 let con = mysql.createConnection({
     host: "localhost",
-    port: 3305,
+    port: 3306,
     user: "root",
-    password: "rootadming0g0600Yr$",
+    password: "password",
     database: "some_combat",
     queryFormat: ""
 });
@@ -44,18 +44,18 @@ con.connect(function (err) {
 async function mysqlQuery(sql, arg, httpVerb, debug = false) {
     try {
         if (arg === undefined || arg === null) {
-            return await query(sql).then((rows)=>{
+            return await query(sql).then((rows) => {
                 debugFunc(rows, debug);
                 return rows;
             });
         } else {
             if (arg.isArray) {
-                return await query(sql, [...arg]).then((rows)=>{
+                return await query(sql, [...arg]).then((rows) => {
                     debugFunc(rows, debug);
                     return rows;
                 });
             } else {
-                return await query(sql, arg).then((rows)=>{
+                return await query(sql, arg).then((rows) => {
                     debugFunc(rows, debug);
                     return rows;
                 });
@@ -70,8 +70,9 @@ async function mysqlQuery(sql, arg, httpVerb, debug = false) {
         return err;
     }
 }
-function debugFunc(rows, debug){
-    if(debug){
+
+function debugFunc(rows, debug) {
+    if (debug) {
         objDebug.debugObjects(rows);
         for (let i = 0; i < rows.length; i++) {
             console.debug("DEBUG --- returned row number :: " + rows.length)
