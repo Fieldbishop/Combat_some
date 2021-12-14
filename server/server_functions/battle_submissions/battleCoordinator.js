@@ -49,14 +49,14 @@ module.exports.endBattle = (req, res) => {
     let query;
     let args;
 
-    let queryForGettingWinner = "SELECT userName FROM battle_submission WHERE battleId = ? ORDER BY rating DESC LIMIT 1";
+    let queryForGettingWinner = "SELECT userName FROM battle_submission WHERE battleId = ? ORDER BY rating DESC LIMIT 1"; //SELECT userName FROM battle_submission WHERE rating = (SELECT MAX(rating) from battle_submission WHERE battleId = ?
     let arg1 = btlID;
     let queryForSavingWinner = "UPDATE battle SET winnerUserName = ? WHERE id = ?";
     let arg2 = [winner, btlID];
     let queryForDisablingLinks = "SET FOREIGN_KEY_CHECKS = 0";
     let queryForEnablingLinks = "SET FOREIGN_KEY_CHECKS = 1";
-    let queryForClearingVotes = "DELETE * FROM user_vote where battleId = ?";
-    let queryForClearingBattleSubmissions = "DELETE * FROM battle_submission where battleId = ?";
+    let queryForClearingVotes = "DELETE FROM user_vote where battleId = ?";
+    let queryForClearingBattleSubmissions = "DELETE FROM battle_submission where battleId = ?";
 
     for (let i = 0; i < 6; i++) {
         switch (i) {

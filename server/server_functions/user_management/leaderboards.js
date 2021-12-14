@@ -49,9 +49,10 @@ function getEndedLeaderboards() {
         }
       }
 
-      query = "DELETE FROM battle WHERE id = ?"
+      query = ""
+      await mysql.mysqlQuery("DELETE FROM user_vote WHERE battleId = ?", id, "User vote delete")
       await mysql.mysqlQuery("DELETE FROM battle_submission WHERE battleId = ?", id, "Sub delete")
-      await mysql.mysqlQuery(query, id, "Delete");
+      await mysql.mysqlQuery("DELETE FROM battle WHERE id = ?", id, "Delete");
     }
   })();
 }
