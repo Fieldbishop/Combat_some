@@ -5,7 +5,7 @@
         <div class="navbar-left">
           <a href="/" style="float: left;">
             <span class="material-icons" style="font-size: 50px">
-              thumb_up
+              sports_martial_arts
             </span>
           </a>
           <a class="nav-link" id="leaderboards" @click="$emit('modal', 0)"><b>Leaderboards</b></a>
