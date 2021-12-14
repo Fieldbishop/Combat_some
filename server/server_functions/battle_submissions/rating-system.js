@@ -16,8 +16,6 @@ module.exports.vote = (req, res) => {
     const battleSubmissionId = req.body.id;
     const vote = req.body.vote;
     const battleId = req.body.battleId;
-    console.log("username: " + username);
-    console.log("battleId: " + battleSubmissionId);
     let query = "SELECT * FROM user_vote WHERE (userName = ? AND battleSubmissionId = ?)";
     (async () => {
         const mysqlResponse = await mysql.mysqlQuery(query, [username, battleSubmissionId], req.method);

@@ -20,22 +20,22 @@
         <image-uploader :battleId="battleId" :username="userState.user" @closeModal="toggleModal"/>
       </template>
     </modal-container>
-    <main-content :loggedIn="userState.loggedIn" :battleId="battleId" @vote="voteImage"/>
+    <main-content :loggedIn="userState.loggedIn" :battleId="battleId" @vote="voteImage" @changeBattleId="changeBattleId"/>
     <battle-popup v-if="userState.loggedIn" @modal="toggleModal"/>
   </div>
 </template>
 
 <script>
-import NavBar from "./components/NavBar";
-import SignUp from "./components/SignUp";
-import LogIn from "./components/LogIn";
-import MainContent from "./components/MainContent";
-import BattlePopup from "./components/BattlePopup";
-import ModalContainer from "./components/ModalContainer";
-import User from "./components/User";
-import ImageUploader from "./components/ImageUploader";
-import LeaderBoards from "./components/Leaderboards";
-import axios from "axios";
+import NavBar from './components/NavBar';
+import SignUp from './components/SignUp';
+import LogIn from './components/LogIn';
+import MainContent from './components/MainContent';
+import BattlePopup from './components/BattlePopup';
+import ModalContainer from './components/ModalContainer';
+import User from './components/User';
+import ImageUploader from './components/ImageUploader';
+import LeaderBoards from './components/Leaderboards';
+import axios from 'axios';
 
 export default {
   name: 'App',
@@ -123,20 +123,17 @@ export default {
       this.userState.user = null;
     },
 
-    /*voteImage(vote, id) {
-      console.log(id)
-      switch (vote) {
-        case 0:
-          console.log("Downvote");
-          break;
-        case 1:
-          console.log("Upvote");
-          break;
-        default:
-          console.log("Unknown");
-          break;
+    changeBattleId(){
+      if(this.cupIds.length === 0){
+        this.getLeaderboardIds();
       }
-    },*/
+      if(this.cupIds.indexOf(this.battleId) === (this.cupIds.length - 1)){
+        this.battleId = this.cupIds[0];
+      } else{
+        this.battleId = this.cupIds[this.cupIds.indexOf(this.battleId) + 1];
+      }
+    },
+
 
     async voteImage(vote, id) {
       if (this.userState.token != null) {
@@ -145,11 +142,9 @@ export default {
           "id" : id,
           "battleId": this.battleId,
           "token" : this.userState.token
-        }).then(response => {
-              console.log(response.data)
-            }).catch(error => {
-              console.log(error);
-            });
+        }).catch(error => {
+          console.log(error);
+        });
         /*                                                        ONKS TÄÄ SAMPO JOKU TÄRKEE? T: LASSI
         try {
           await axios.post("http://localhost:8081/api/rate", {
