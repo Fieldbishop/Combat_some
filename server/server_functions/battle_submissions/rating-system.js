@@ -15,17 +15,20 @@ module.exports.vote = (req, res) => {
     const username = jwt.verify(req.body.token, "secret").username;
     const battleSubmissionId = req.body.id;
     const vote = req.body.vote;
-    let query = "SELECT id FROM user_vote WHERE (userName = ?, battleSubmissionId = ?)";
+    const battleId = req.body.battleId;
+    console.log("username: " + username);
+    console.log("battleId: " + battleSubmissionId);
+    let query = "SELECT * FROM user_vote WHERE (userName = ? AND battleSubmissionId = ?)";
     (async () => {
-        const mysqlResponse = await mysql.mysqlQuery(query, [vote, battleSubmissionId], req.method);
+        const mysqlResponse = await mysql.mysqlQuery(query, [username, battleSubmissionId], req.method);
         let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
         let args;
-        if (status === 200) {
-            query = "UPDATE user_vote set vote = ? WHERE (userName = ?, battleSubmissionId = ?)";
+        if (status === 200 && mysqlResponse[0]) {
+            query = "UPDATE user_vote set vote = ? WHERE (userName = ? AND id = ?)";
             args = [vote, username, battleSubmissionId];
         } else {
-            query = "INSERT INTO user_vote VALUES(?,?,?,?)";
-            args = [null, username, battleSubmissionId, vote];
+            query = "INSERT INTO user_vote VALUES(?,?,?,?,?)";
+            args = [null, username, battleSubmissionId,battleId, vote];
         }
         const secondResponse = await mysql.mysqlQuery(query, args, req.method);
         status = mysqlHelpers.httpStatusWithSqlResponse(secondResponse);

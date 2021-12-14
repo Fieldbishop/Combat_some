@@ -143,6 +143,7 @@ export default {
         await axios.put("http://localhost:8081/api/newVote", {
           "vote" : vote,
           "id" : id,
+          "battleId": this.battleId,
           "token" : this.userState.token
         }).then(response => {
               console.log(response.data)

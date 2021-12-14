@@ -6,26 +6,8 @@ const multer = require('../../server_modules/multer-storage')
 module.exports.getImage = (req, res) =>{
   const path = (multer.path+ "\\").replace(/\\/g,"\\\\");
   const regexPath = new RegExp('^'+path, 'g');
-  console.log(regexPath);
-  console.log("multer path :: "+ path);
-  console.log("req path :: "+ req.query.path);
   if(req.query.path.match(regexPath)){
-    let filename = req.query.path.replace(regexPath, '')
-    console.log(filename);
     res.sendFile(req.query.path);
-    /*const reader = fs.createReadStream(req.query.path);
-    const passThrough = new stream.PassThrough()
-    stream.pipeline(reader,passThrough,(err => {
-      if(err){
-        console.log(err);
-        return res.status(404).send(err);
-      }
-    }))
-    passThrough.pipe(res);
-  } else{
-    res.status(403).send({
-      error: "Path didn't match or didn't find parameters"
-    })*/
   }
 }
 module.exports.getSubmissionData = (req, res)=>{
