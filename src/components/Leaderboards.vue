@@ -63,7 +63,7 @@ export default {
   methods: {
     async loadCups() {
       try {
-        await axios.get("http://localhost:8081/api/leaderboards")
+        await axios.get("http://localhost:8081/api/getOpenCups")
         .then(response => {
           this.leaderboards = response.data;
           for(let i = 0; i < this.leaderboards.length; i++) {

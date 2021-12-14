@@ -28,7 +28,7 @@ module.exports.vote = (req, res) => {
             args = [vote, username, battleSubmissionId];
         } else {
             query = "INSERT INTO user_vote VALUES(?,?,?,?,?)";
-            args = [null, username, battleSubmissionId,battleId, vote];
+            args = [null, username, battleSubmissionId, battleId, vote];
         }
         const secondResponse = await mysql.mysqlQuery(query, args, req.method);
         status = mysqlHelpers.httpStatusWithSqlResponse(secondResponse);

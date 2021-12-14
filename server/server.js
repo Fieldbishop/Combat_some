@@ -19,11 +19,12 @@ const userManagement = require('./server_functions/user_management/user-manageme
 const imageUpload = require('./server_functions/battle_submissions/image_upload')
 const ratingSystem = require('./server_functions/battle_submissions/rating-system.js');
 const battleDataHandler = require('./server_functions/battle_submissions/battle-data-handler.js');
+const battleCoordinator = require("./server_functions/battle_submissions/battleCoordinator");
 /**
  * Other Variables
  */
 
-let uploader = multer({storage : storageProcess.storage });
+let uploader = multer({storage: storageProcess.storage});
 /**
  * Middleware and server app wide actions.
  */
@@ -32,20 +33,21 @@ let uploader = multer({storage : storageProcess.storage });
 app.use(express.json());
 // for parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({extended: true}));
-app.options('*', cors(corsOptions), ()=>{});
+app.options('*', cors(corsOptions), () => {
+});
 
 /**
  * User Submissions
  */
 
 /* Uploads an image and submits battle*/
-app.post("/api/upload_file",cors(corsOptions),uploader.single('image'),(req,res) =>{
+app.post("/api/upload_file", cors(corsOptions), uploader.single('image'), (req, res) => {
     imageUpload.uploadImage(req, res);
 });
-app.get("/api/images" ,cors(corsOptions),(req,res) => {
+app.get("/api/images", cors(corsOptions), (req, res) => {
     battleDataHandler.getImage(req, res);
 });
-app.get("/api/submissionData",cors(corsOptions),(req,res)=>{
+app.get("/api/submissionData", cors(corsOptions), (req, res) => {
     battleDataHandler.getSubmissionData(req, res);
 });
 
@@ -62,7 +64,7 @@ app.post('/api/createUser', cors(corsOptions), function (req, res) {
     userManagement.createUser(req, res);
 });
 
-app.post('/api/login', cors(corsOptions), (req, res)=>{
+app.post('/api/login', cors(corsOptions), (req, res) => {
     userManagement.userLogin(req, res);
 });
 
@@ -86,7 +88,7 @@ app.patch('/api/usersubs', cors(corsOptions), (req, res) => {
 });
 
 app.put('/api/newVote', cors(corsOptions), (req, res) => {
-    ratingSystem.vote(req,res);
+    ratingSystem.vote(req, res);
 });
 
 /* Returns a leaderboard dataset from the database asynchronously */
@@ -94,10 +96,18 @@ app.get('/api/leaderboard', function (req, res) {
     leaderBoards.getLeaderboardsByWins(req, res);
 });
 
-app.get('/api/leaderboards', cors(corsOptions), (req, res)=>{
+app.get('/api/getOpenCups',cors(corsOptions), (req,res) =>{
+    battleCoordinator.checkIfNoBattle();
+    leaderBoards.getEndedLeaderboards();
+    leaderBoards.getOpenCups(req, res);
+});
+
+app.get('/api/leaderboards', cors(corsOptions), (req, res) => {
+    battleCoordinator.checkIfNoBattle();
     leaderBoards.getEndedLeaderboards();
     leaderBoards.getLeaderboards(req, res);
-})
+});
+
 
 /**
  * Port Listener
