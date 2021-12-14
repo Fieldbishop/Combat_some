@@ -1,5 +1,6 @@
 const mysql = require('../../server_modules/mysql-connection');
 const mysqlHelpers = require('../../server_modules/mysql-helpers');
+const {deleteFile} = require("./image_upload");
 const themes = [
     "Night",
     "Nature",
@@ -118,4 +119,26 @@ module.exports.endBattle = (id) => {
             }
         })();
     }
+}
+
+module.exports.deleteSubmissionImages = (battleId) => {
+    console.log("lassi test 1");
+    let query = "SELECT imageFilepath WHERE battleId = ?";
+    let args = battleId;
+    (async () => {
+        console.log("lassi test 2");
+        let mysqlResponse = await mysql.mysqlQuery(query, args, "Delete files");
+        let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
+        if (status !== 200) {
+            console.error(mysqlResponse);
+        }
+        if(mysqlResponse.length > 0){
+            console.log("lassi test 3");
+            for (let i = 0; i < mysqlResponse.length; i++) {
+                console.log("lassi test 4");
+                console.log("trying to delete file " + mysqlResponse[i].imageFilepath)
+                deleteFile(mysqlResponse[i].imageFilepath);
+            }
+        }
+    })();
 }

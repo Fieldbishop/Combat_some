@@ -22,3 +22,8 @@ module.exports.uploadImage = (req, res) =>{
     res.status(statusCode).send(response);
   })()
 }
+
+module.exports.deleteFile = (path) => {
+  fs.unlinkSync(path);
+  console.log('File deleted!');
+}
