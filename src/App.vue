@@ -62,7 +62,6 @@ export default {
       },
       battleId: undefined,
       cupIds: [],
-
     }
   },
   beforeMount() {
@@ -128,10 +127,8 @@ export default {
       }
       if(this.cupIds.indexOf(this.battleId) >= (this.cupIds.length - 1)){
         this.battleId = this.cupIds[0];
-        console.log("changed battle id to" + this.battleId);
       } else{
         this.battleId = this.cupIds[this.cupIds.indexOf(this.battleId) + 1];
-        console.log("changed battle id to" + this.battleId);
       }
     },
 
