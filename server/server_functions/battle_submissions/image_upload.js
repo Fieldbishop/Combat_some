@@ -2,6 +2,9 @@ const mysql = require('../../server_modules/mysql-connection');
 const mysqlHelpers = require('../../server_modules/mysql-helpers');
 const fs = require('fs');
 
+/**
+ * Uploads an image to the server
+ */
 module.exports.uploadImage = (req, res) => {
     const bodyObj = JSON.parse(JSON.stringify(req.body));
     let response;
@@ -24,6 +27,10 @@ module.exports.uploadImage = (req, res) => {
     })()
 }
 
+/**
+ * deletes a file.
+ * @param path path to the file to be deleted
+ */
 module.exports.deleteFile = async function asyncCall(path) {
     fs.unlink(path, err => {
         console.log(err)

@@ -34,7 +34,8 @@ module.exports.checkIfNoBattle = () => {
 }
 
 /**
- * Creates a cup
+ * Starts a new cup
+ * @param type the length of the cup
  */
 module.exports.startNewBattle = (type) => {
     let time = Math.floor((Date.now() / 1000 + (type * 3600)));
@@ -51,9 +52,8 @@ module.exports.startNewBattle = (type) => {
 }
 
 /**
- * Ends a cup, checks the winner and updates it into cup, removes all votes cast for the ending cup
- * and clears the entries for submitted images from the database
- * @param id
+ * Handles deleting the relevant database entries on end of a cup
+ * @param id ID of the battle that ended
  */
 module.exports.endBattle = (id) => {
     console.log(id);
@@ -62,7 +62,7 @@ module.exports.endBattle = (id) => {
     let query;
     let args;
 
-    let queryForGettingWinner = "SELECT userName FROM battle_submission WHERE battleId = ? ORDER BY rating DESC LIMIT 1"; //SELECT userName FROM battle_submission WHERE rating = (SELECT MAX(rating) from battle_submission WHERE battleId = ?
+    let queryForGettingWinner = "SELECT userName FROM battle_submission WHERE battleId = ? ORDER BY rating DESC LIMIT 1";
     let arg1 = btlID;
     let queryForSavingWinner = "UPDATE battle SET retired = 1, winnerUserName = ? WHERE id = ?";
     let arg2 = [winner, btlID];
@@ -119,20 +119,21 @@ module.exports.endBattle = (id) => {
     }
 }
 
+/**
+ * For deleting the images at the end of a cup
+ * @param battleId Id of the cup that is ending
+ */
 module.exports.deleteSubmissionImages = (battleId) => {
     let query = "SELECT imageFilepath FROM battle_submission WHERE battleId = ?";
     let args = battleId;
     (async () => {
         let mysqlResponse = await mysql.mysqlQuery(query, args, "Delete files");
-        console.log(mysqlResponse.length);
         let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
         if (status !== 200) {
-            console.log("sqlresponso: " + mysqlResponse);
+            console.log(mysqlResponse);
         }
-        console.log("sqlresponso: " + mysqlResponse);
         if (mysqlResponse.length > 0) {
             for (let i = 0; i < mysqlResponse.length; i++) {
-                console.log("trying to delete file " + mysqlResponse[i].imageFilepath);
                 await deleteFile(mysqlResponse[i].imageFilepath);
             }
         }

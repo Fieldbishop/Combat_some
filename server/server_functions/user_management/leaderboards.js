@@ -2,6 +2,9 @@ const mysql = require('../../server_modules/mysql-connection');
 const mysqlHelpers = require('../../server_modules/mysql-helpers');
 const {endBattle, startNewBattle, deleteSubmissionImages} = require("../battle_submissions/battleCoordinator");
 
+/**
+ * Returns user with most wins
+ */
 module.exports.getLeaderboardsByWins = (req, res) => {
     if (req.body) {
         let query = "SELECT userName FROM user ORDER BY wins DESC LIMITS 0, 100";
@@ -14,6 +17,9 @@ module.exports.getLeaderboardsByWins = (req, res) => {
     }
 }
 
+/**
+ * returns all from battle database if id isnt specified, else it returns one battle that is
+ */
 module.exports.getLeaderboards = (req, res) => {
     let query;
 
@@ -29,6 +35,9 @@ module.exports.getLeaderboards = (req, res) => {
     })();
 }
 
+/**
+ * returns all of the cups that are active at the moment
+ */
 module.exports.getOpenCups = (req, res) => {
     let query;
     if (Object.keys(req.query).length !== 0) {
@@ -43,6 +52,10 @@ module.exports.getOpenCups = (req, res) => {
     })();
 }
 
+/**
+ * Checks for battles that have ended before current time and havent been flagged.
+ * calls the methods that handle all end of cup actions
+ */
 function getEndedLeaderboards() {
     let now = new Date().getTime();
     let type;
