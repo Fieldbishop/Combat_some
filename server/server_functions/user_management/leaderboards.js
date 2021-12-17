@@ -29,7 +29,7 @@ module.exports.getLeaderboards = (req, res) => {
     })();
 }
 
-module.exports.getOpenCups = (req,res) =>{
+module.exports.getOpenCups = (req, res) => {
     let query;
     if (Object.keys(req.query).length !== 0) {
         query = "SELECT * FROM battle WHERE id = ? AND retired IS NULL";
@@ -45,12 +45,11 @@ module.exports.getOpenCups = (req,res) =>{
 
 function getEndedLeaderboards() {
     let now = new Date().getTime();
-    let id;
     let type;
     let query = "SELECT * FROM battle WHERE endDate= (SELECT MIN(endDate) FROM battle WHERE retired IS NULL)";
     (async () => {
         let mysqlResponse1 = await mysql.mysqlQuery(query, null, 'End date');
-        if(mysqlResponse1.length > 0){
+        if (mysqlResponse1.length > 0) {
             const then = new Date(mysqlResponse1[0].endDate).getTime();
             let id = mysqlResponse1[0].id;
             if (now >= then) {
@@ -62,7 +61,7 @@ function getEndedLeaderboards() {
                         await mysql.mysqlQuery(query, mysqlResponse2[i].userName, "Wins");
                     }
                 }
-                if(mysqlResponse1.length > 0){
+                if (mysqlResponse1.length > 0) {
                     for (let i = 0; i < mysqlResponse1.length; i++) {
                         id = mysqlResponse1[i].id;
                         type = mysqlResponse1[i].cupType;
@@ -75,4 +74,5 @@ function getEndedLeaderboards() {
         }
     })();
 }
+
 module.exports.getEndedLeaderboards = getEndedLeaderboards;

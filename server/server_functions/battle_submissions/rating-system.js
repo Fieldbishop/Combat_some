@@ -23,7 +23,7 @@ module.exports.vote = (req, res) => {
         let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
         try {
             oldVote = mysqlResponse[0].vote;
-        }catch (err) {
+        } catch (err) {
             oldVote = 0;
         }
         let args;

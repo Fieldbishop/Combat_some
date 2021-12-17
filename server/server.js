@@ -23,12 +23,10 @@ const battleCoordinator = require("./server_functions/battle_submissions/battleC
 /**
  * Other Variables
  */
-
 let uploader = multer({storage: storageProcess.storage});
 /**
  * Middleware and server app wide actions.
  */
-
 // for parsing application/json
 app.use(express.json());
 // for parsing application/x-www-form-urlencoded
@@ -39,21 +37,18 @@ app.options('*', cors(corsOptions), () => {
 /**
  * User Submissions
  */
-
 /* Uploads an image and submits battle*/
 app.post("/api/upload_file", cors(corsOptions), uploader.single('image'), (req, res) => {
     imageUpload.uploadImage(req, res);
-});
+}); //x
 app.get("/api/images", cors(corsOptions), (req, res) => {
     battleDataHandler.getImage(req, res);
-});
+}); //x
 app.get("/api/submissionData", cors(corsOptions), (req, res) => {
     battleDataHandler.getSubmissionData(req, res);
-});
+}); //x
 
-app.post("/api/rate", cors(corsOptions), (req, res) => {
-    ratingSystem.updateRating(req, res);
-});
+
 
 /**
  *  User Credentials and Verification
@@ -62,33 +57,14 @@ app.post("/api/rate", cors(corsOptions), (req, res) => {
 /* Inserts a new user into database on registration asynchronously */
 app.post('/api/createUser', cors(corsOptions), function (req, res) {
     userManagement.createUser(req, res);
-});
+}); //x
 
 app.post('/api/login', cors(corsOptions), (req, res) => {
     userManagement.userLogin(req, res);
-});
+}); //x
 
 app.get('/login/test', (req, res) => {
     userManagement.userLoginTest(req, res);
-});
-
-app.post('/api/verify', cors(corsOptions), (req, res) => {
-    userManagement.userVerify(req, res);
-})
-
-/**
- * User rating information
- */
-app.post('/api/userstats', cors(corsOptions), (req, res) => {
-    userStats.userWins(req, res);
-})
-
-app.patch('/api/usersubs', cors(corsOptions), (req, res) => {
-    userStats.updateUserSubmissions(req, res);
-});
-
-app.put('/api/newVote', cors(corsOptions), (req, res) => {
-    ratingSystem.vote(req, res);
 });
 
 /* Returns a leaderboard dataset from the database asynchronously */
@@ -96,17 +72,40 @@ app.get('/api/leaderboard', function (req, res) {
     leaderBoards.getLeaderboardsByWins(req, res);
 });
 
-app.get('/api/getOpenCups',cors(corsOptions), (req,res) =>{
+app.post("/api/rate", cors(corsOptions), (req, res) => {
+    ratingSystem.updateRating(req, res);
+});
+
+app.post('/api/verify', cors(corsOptions), (req, res) => {
+    userManagement.userVerify(req, res);
+}) //x
+
+/**
+ * User rating information
+ */
+app.post('/api/userstats', cors(corsOptions), (req, res) => {
+    userStats.userWins(req, res);
+}) //x
+
+app.patch('/api/usersubs', cors(corsOptions), (req, res) => {
+    userStats.updateUserSubmissions(req, res);
+}); //x
+
+app.put('/api/newVote', cors(corsOptions), (req, res) => {
+    ratingSystem.vote(req, res);
+}); //x
+
+app.get('/api/getOpenCups', cors(corsOptions), (req, res) => {
     battleCoordinator.checkIfNoBattle();
     leaderBoards.getEndedLeaderboards();
     leaderBoards.getOpenCups(req, res);
-});
+}); //x
 
 app.get('/api/leaderboards', cors(corsOptions), (req, res) => {
     battleCoordinator.checkIfNoBattle();
     leaderBoards.getEndedLeaderboards();
     leaderBoards.getLeaderboards(req, res);
-});
+}); //x
 
 
 /**

@@ -22,7 +22,7 @@ module.exports.checkIfNoBattle = () => {
     (async () => {
         let mysqlResponse = await mysql.mysqlQuery(query, null, "checkIfNoBattle");
         let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
-        if(status!==200){
+        if (status !== 200) {
             console.error(mysqlResponse);
         }
         if (mysqlResponse.length === 0) {
@@ -37,14 +37,14 @@ module.exports.checkIfNoBattle = () => {
  * Creates a cup
  */
 module.exports.startNewBattle = (type) => {
-    let time = Math.floor((Date.now() / 1000 + (type*3600)));
+    let time = Math.floor((Date.now() / 1000 + (type * 3600)));
     let category = themes[Math.floor(Math.random() * themes.length)];
     let query = "INSERT INTO battle VALUES(null,null,FROM_UNIXTIME(" + time + "),?,null,?)";
     let args = [category, type];
     (async () => {
         let mysqlResponse = await mysql.mysqlQuery(query, args, "generateBattle");
         let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
-        if(status!==200){
+        if (status !== 200) {
             console.error(mysqlResponse);
         }
     })();
@@ -69,9 +69,7 @@ module.exports.endBattle = (id) => {
     let queryForDisablingLinks = "SET FOREIGN_KEY_CHECKS = 0";
     let queryForEnablingLinks = "SET FOREIGN_KEY_CHECKS = 1";
     let queryForClearingVotes = "DELETE FROM user_vote where battleId = ?";
-    let arg3 = btlID;
     let queryForClearingBattleSubmissions = "DELETE FROM battle_submission where battleId = ?";
-    let arg4 = btlID;
 
     for (let i = 0; i < 6; i++) {
         switch (i) {
@@ -89,11 +87,11 @@ module.exports.endBattle = (id) => {
                 break;
             case 3:
                 query = queryForClearingVotes;
-                args = arg3;
+                args = arg1;
                 break;
             case 4:
                 query = queryForClearingBattleSubmissions;
-                args = arg4;
+                args = arg1;
                 break;
             case 5:
                 query = queryForEnablingLinks;
@@ -107,13 +105,13 @@ module.exports.endBattle = (id) => {
                 let mysqlResponse = await mysql.mysqlQuery(query, args, null);
                 let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
                 winner = mysqlResponse;
-                if(status!==200){
+                if (status !== 200) {
                     console.error(mysqlResponse);
                 }
-            }else{
+            } else {
                 let mysqlResponse = await mysql.mysqlQuery(query, args, null);
                 let status = mysqlHelpers.httpStatusWithSqlResponse(mysqlResponse);
-                if(status!==200){
+                if (status !== 200) {
                     console.error(mysqlResponse);
                 }
             }
@@ -132,7 +130,7 @@ module.exports.deleteSubmissionImages = (battleId) => {
             console.log("sqlresponso: " + mysqlResponse);
         }
         console.log("sqlresponso: " + mysqlResponse);
-        if(mysqlResponse.length > 0){
+        if (mysqlResponse.length > 0) {
             for (let i = 0; i < mysqlResponse.length; i++) {
                 console.log("trying to delete file " + mysqlResponse[i].imageFilepath);
                 await deleteFile(mysqlResponse[i].imageFilepath);
