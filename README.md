@@ -1,5 +1,10 @@
 # Some Combat
 
+## Api calls in the backend
+```
+
+```
+
 ## Project setup
 ```
 npm install
@@ -35,35 +40,35 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     <tr>
         <td>POST</td>
         <td>/api/upload_file</td>
-        <td></td>
+        <td>Uploads an image to the server.</td>
         <td> Formdata name="image"; filename="some.png"; name="battleId"; name="username" </td>
         <td style="text-align: left" >{"fieldCount":0,"affectedRows":1,"insertId":19,"serverStatus":2,"warningCount":0,"message":"","protocol41":true,"changedRows":0}</td>
     </tr>
     <tr>
         <td>GET</td>
         <td>/api/images</td>
-        <td></td>
+        <td>Returns images from the server.</td>
         <td>?path=</td>
         <td style="text-align: left" >Image file if any</td>
     </tr>
     <tr>
         <td>GET</td>
         <td>/api/submissionData</td>
-        <td></td>
+        <td>Links an uploaded file with the user and the cup it was posted to.</td>
         <td></td>
         <td style="text-align: left" >[{"id": int, "imageFilepath": String}]</td>
     </tr>
     <tr>
         <td>POST</td>
         <td>/api/createUser</td>
-        <td></td>
+        <td>Creates a user.</td>
         <td></td>
         <td style="text-align: left" ></td>
     </tr>
     <tr>
         <td>POST</td>
         <td>/api/login</td>
-        <td></td>
+        <td>Logs a user in.</td>
         <td></td>
         <td style="text-align: left" >
         {"user":{"username": String,"password": String},"token": String}
@@ -72,7 +77,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     <tr>
         <td>POST</td>
         <td>/api/verify</td>
-        <td></td>
+        <td>Checks if credentials are correct.</td>
         <td>{ token: "example"}</td>
         <td style="text-align: left" >
             { "error":false,"data":{"username":"string","password":"string","iat":0,"exp":0},"verify":true}
@@ -81,35 +86,35 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     <tr>
         <td>POST</td>
         <td>/api/userstats</td>
-        <td></td>
+        <td>Returns cup stats of an user.</td>
         <td></td>
         <td style="text-align: left" >[{"userName":String ,"wins": int,"participations": int}]</td>
     </tr>
     <tr>
         <td>PATCH</td>
         <td>/api/usersubs</td>
-        <td></td>
+        <td>Updates user's submissioncount.</td>
         <td></td>
         <td style="text-align: left" >{"username": String}</td>
     </tr>
     <tr>
         <td>PUT</td>
         <td>/api/newVote</td>
-        <td></td>
+        <td>Inputs a new vote on a picture into database.</td>
         <td></td>
         <td style="text-align: left" >{"fieldCount": int ,"affectedRows": int,"insertId": int,"serverStatus": int,"warningCount": int,"message": String ,"protocol41": boolean, "changedRows": int}</td>
     </tr>
     <tr>
         <td>GET</td>
         <td>/api/getOpenCups</td>
-        <td>Gets as response</td>
+        <td>Returns active cups.</td>
         <td>-</td>
         <td style="text-align: left" >[{"id": int,"winnerUserName":null, "endDate": Date,"category": String,"retired":null ,"cupType": int}]</td>
     </tr>
     <tr>
         <td>GET</td>
         <td>/api/leaderboards</td>
-        <td></td>
+        <td>Returns all cups.</td>
         <td>?id=3</td>
         <td style="text-align: left" >[{"id": int,"winnerUserName": null, "endDate": Date,"category": String,"retired":null, "cupType": int}]</td>
     </tr>
