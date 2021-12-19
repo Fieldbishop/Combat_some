@@ -17,7 +17,7 @@
             placeholder="Username"
             name="sign-name"
             v-model="signUp.name"
-            pattern="{,59}"
+            pattern="[a-zA-Z0-9-]{3,59}"
             @focus="clearError"
             required
         />
@@ -33,7 +33,7 @@
             placeholder="Password"
             name="sign-pssw"
             v-model="signUp.psswd"
-            pattern="{,499}"
+            pattern="[a-zA-Z0-9-]{5,499}"
             @focus="clearError"
             required
         />
@@ -116,8 +116,6 @@ export default {
         name: '',
         psswd: '',
       }
-      this.$refs.psswdCheck.value = "";
-
     },
 
     clearError() {
