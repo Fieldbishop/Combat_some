@@ -57,8 +57,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
         <td>POST</td>
         <td>/api/createUser</td>
         <td></td>
-        <td></td>
-        <td style="text-align: left" ></td>
+        <td>{username: "string",
+        password: "string"}</td>
+        <td style="text-align: left" > Mysql Response Json</td>
     </tr>
     <tr>
         <td>POST</td>
