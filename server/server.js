@@ -95,22 +95,6 @@ app.get('/api/leaderboards', cors(corsOptions), (req, res) => {
 });
 
 /**
- * Are these used somewhere?
- */
-app.get('/login/test', (req, res) => {
-    userManagement.userLoginTest(req, res);
-});
-
-/* Returns a leaderboard dataset from the database asynchronously */
-app.get('/api/leaderboard', function (req, res) {
-    leaderBoards.getLeaderboardsByWins(req, res);
-});
-
-app.post("/api/rate", cors(corsOptions), (req, res) => {
-    ratingSystem.updateRating(req, res);
-});
-
-/**
  * Port Listener
  */
 const port = process.env.PORT || 8081
