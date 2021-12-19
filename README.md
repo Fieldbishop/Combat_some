@@ -43,14 +43,14 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
         <td>GET</td>
         <td>/api/images</td>
         <td>Returns images from the server.</td>
-        <td>?path=</td>
+        <td>?path= String</td>
         <td style="text-align: left" >Image file if any</td>
     </tr>
     <tr>
         <td>GET</td>
         <td>/api/submissionData</td>
         <td>Links an uploaded file with the user and the cup it was posted to.</td>
-        <td></td>
+        <td>?id= Number</td>
         <td style="text-align: left" >[{"id": int, "imageFilepath": String}]</td>
     </tr>
     <tr>
@@ -83,21 +83,21 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
         <td>POST</td>
         <td>/api/userstats</td>
         <td>Returns cup stats of an user.</td>
-        <td></td>
+        <td>{username: String}</td>
         <td style="text-align: left" >[{"userName":String ,"wins": int,"participations": int}]</td>
     </tr>
     <tr>
         <td>PATCH</td>
         <td>/api/usersubs</td>
         <td>Updates user's submissioncount.</td>
-        <td></td>
+        <td>{username: String}</td>
         <td style="text-align: left" >{"username": String}</td>
     </tr>
     <tr>
         <td>PUT</td>
         <td>/api/newVote</td>
         <td>Inputs a new vote on a picture into database.</td>
-        <td></td>
+        <td>{ vote: Number, id: Number, battleId: Number, token: Number }</td>
         <td style="text-align: left" >{"fieldCount": int ,"affectedRows": int,"insertId": int,"serverStatus": int,"warningCount": int,"message": String ,"protocol41": boolean, "changedRows": int}</td>
     </tr>
     <tr>
