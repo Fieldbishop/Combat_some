@@ -91,7 +91,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
         <td>/api/usersubs</td>
         <td>Updates user's submissioncount.</td>
         <td>{username: String}</td>
-        <td style="text-align: left" >{"username": String}</td>
+        <td style="text-align: left" >-</td>
     </tr>
     <tr>
         <td>PUT</td>
